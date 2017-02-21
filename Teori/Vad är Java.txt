@@ -1,0 +1,11 @@
+FirstProgram.java (källkod)
+FirstProgram.class (byte kod)
+
+javac kompilatorn
+java kör .class filer
+
+ex. 
+javac FirstProgram.java -> blir FirstProgram.class
+java FirstProgram -> kör programmet
+
+javadoc Om man har lagt in kommentarer så skapas en html sida som förklara sin kod.

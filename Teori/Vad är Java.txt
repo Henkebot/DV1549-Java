@@ -9,3 +9,50 @@ javac FirstProgram.java -> blir FirstProgram.class
 java FirstProgram -> kör programmet
 
 javadoc Om man har lagt in kommentarer så skapas en html sida som förklara sin kod.
+
+--JAVA--
+Objektorienterat språk
+All kod placeras i klasser
+Kommentarer // radvis eller /* block */
+Funktioner i C++ är metoder i Java
+Startar i main-metoden
+
+Primitiva typer: int, double, float, long, car, boolean
+Alla andra typer är referenstyper (klass eller interface)
+
+int value = 2; value[2]
+icke primitiv: String name; name [null]
+
+Java har en for-each-sats vilken kan användas för arrayer och behåller-objekt
+
+for(datatyp namn: container) { .. }
+
+static använder man i klasser som inte ska instansieras 
+
+--Array
+datatype[] name; //name har null
+datatype[] name = null;
+datatype[] name = { initlist};
+datatype[] name = new datatype[size];
+
+--Java vs C++--
+I Java finns inte operator-överlagring
+I Java skapas objekt alltid med new;
+	String behöver inte använda new.
+I Java inträder dynamisk bindning automatiskt vid överskuggning
+Motsvarigheten till rent virtuell funktion i C++ är abstrakt metod i Java.
+I Java kan man skapa interface (innehåller endast abstrakta metoder och eventuellt konstanter)
+I Java finns inte explicita referensparametrar ( & )
+Medlemsvariabler i C++ är instansvariabler i Java
+Default accessmodifierare i java är public vilket i c++ är private.
+
+I Java punkt-notation istället för pil-operatorn
+I Java finns inte defaultargument
+I Java finns inte destruktorer
+I java "vet" en array sin längd
+I Java finns en "garbage collector" vilket gör ett avallokering int ska/kan hanteras
+
+final ( konstant ) 
+
+
+

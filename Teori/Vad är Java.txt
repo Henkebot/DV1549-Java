@@ -33,7 +33,20 @@ static använder man i klasser som inte ska instansieras
 datatype[] name; //name har null
 datatype[] name = null;
 datatype[] name = { initlist};
-datatype[] name = new datatype[size];
+datatype[] name = new datatype[size]; 	
+
+--Inmatning
+Kan använda Scanner
+
+Skapa en "inström" från tangentbordet:
+	new Scanner(System.in);
+Finns metoder för att läsa från tangentbordet:
+	-nextLine();
+	-nextInt();
+Stäng strömmen med metoden close().
+
+--Slumpa tal
+Math.random() get tal inom [0..1[
 
 --Java vs C++--
 I Java finns inte operator-överlagring

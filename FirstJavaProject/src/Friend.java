@@ -1,4 +1,4 @@
-
+//Detta är en friend klass!
 public class Friend
 {
 	// Instansvariabler

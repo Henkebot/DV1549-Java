@@ -3,21 +3,26 @@ package lektionTva;
 public class Book extends Media
 {
 	private String author;
-	
+
 	public Book(String title, int pubYear, String author)
 	{
 		super(title, pubYear);
 		this.author = author;
 	}
-	
+
 	public Book()
 	{
 		this("UnknownTitle", 0, "UnknownAuthor");
 	}
 	
-	public String toString()
+	public String getAuthor()
 	{
-		return super.toString() + "Author: " + author + "\n";
+		return author;
+	}
+
+	public String toStringSpec()
+	{
+		return  "Author: " + author + "\n";
 	}
 
 	@Override
@@ -38,6 +43,5 @@ public class Book extends Media
 			return false;
 		return true;
 	}
-	
-	
+
 }

@@ -39,5 +39,6 @@ public class Uppgift2
 		}
 		
 		System.out.println(noArrayHere);
+		input.close();
 	}
 }

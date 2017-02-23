@@ -72,6 +72,10 @@ För varje primitv datatyp finns det en klassmotsvarighet
 Kan bland annat användas för konvertering mellan sträng och primitiva
 Integer.parseInt(), Interger.toString(), String.valueOf()
 
+--Interface
+Endast abstrakta metoder
+samt konstanter
+
 --Java vs C++--
 I Java finns inte operator-överlagring
 I Java skapas objekt alltid med new;

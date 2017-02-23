@@ -1,6 +1,8 @@
 package lektionTva;
 
-public class Person
+import java.io.Serializable;
+//Måste implements Serializable för att kunna strömmas till fil.
+public class Person implements Serializable
 {
 	//Privata instansvaribler
 	private String lastName;

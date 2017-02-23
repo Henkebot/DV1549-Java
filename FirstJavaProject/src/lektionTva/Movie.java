@@ -16,10 +16,23 @@ public class Movie extends Media
 	{
 		this("UnknownTitle", 0, "UnknownActor", 0);
 	}
+
 	
-	public String toString()
+	public String getMainActor()
 	{
-		return super.toString() + "Main actor: " + mainActor + "\nPlayTime: " + playTime + "\n";
+		return mainActor;
+	}
+	public int getPlayTime()
+	{
+		return playTime;
+	}
+	public void setMainActor(String mainActor)
+	{
+		this.mainActor = mainActor;
+	}
+	public void setPlayTime(int playTime)
+	{
+		this.playTime = playTime;
 	}
 
 
@@ -42,6 +55,13 @@ public class Movie extends Media
 		if (playTime != other.playTime)
 			return false;
 		return true;
+	}
+
+	@Override
+	public String toStringSpec()
+	{
+	
+		return  "Main actor: " + mainActor + "\nPlayTime: " + playTime + "\n";
 	}
 	
 	

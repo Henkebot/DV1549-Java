@@ -1,6 +1,6 @@
 package lektionTva;
 
-public class Media
+public abstract class Media
 {
 	private String title;
 	private int pubYear;
@@ -36,8 +36,10 @@ public class Media
 	public String toString()
 	{
 	
-		return "Title: " + title + "\nPub Year: " + pubYear +"\n";
+		return "Title: " + title + "\nPub Year: " + pubYear +"\n" + toStringSpec();
 	}
+	
+	public abstract String toStringSpec();
 	
 	@Override
 	public boolean equals(Object obj)

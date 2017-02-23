@@ -14,4 +14,30 @@ public class Book extends Media
 	{
 		this("UnknownTitle", 0, "UnknownAuthor");
 	}
+	
+	public String toString()
+	{
+		return super.toString() + "Author: " + author + "\n";
+	}
+
+	@Override
+	public boolean equals(Object obj)
+	{
+		if (this == obj)
+			return true;
+		if (!super.equals(obj))
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Book other = (Book) obj;
+		if (author == null)
+		{
+			if (other.author != null)
+				return false;
+		} else if (!author.equals(other.author))
+			return false;
+		return true;
+	}
+	
+	
 }

@@ -1,3 +1,4 @@
+package lektionEtt;
 import java.util.Scanner;
 
 public class StringTest

@@ -1,3 +1,4 @@
+package lektionEtt;
 import javax.swing.JOptionPane;
 
 public class TestOfJOptionPane

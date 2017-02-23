@@ -1,3 +1,4 @@
+package lektionEtt;
 
 public class Dice
 {

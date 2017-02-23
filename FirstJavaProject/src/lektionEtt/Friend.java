@@ -1,3 +1,4 @@
+package lektionEtt;
 //Detta är en friend klass!
 public class Friend
 {

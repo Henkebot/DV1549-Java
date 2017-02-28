@@ -62,6 +62,7 @@ public class TestGUI extends JFrame
 		this.setVisible(true);
 		this.setLocationRelativeTo(null);
 		this.setDefaultCloseOperation(3);
+		
 		//this.setLayout(new FlowLayout());
 		//this.add(contentPane);
 	}
@@ -71,20 +72,19 @@ public class TestGUI extends JFrame
 	private void initFields()
 	{
 		contentPane = this.getContentPane();
+		contentPane.setLayout(null);
 		txtNrOfHits = new JTextField("Antal klickar: " + nrOfClicks);
-		txtNrOfHits.setSize(20, 20);
+		txtNrOfHits.setBounds(20, 20, 30, 30);
 		contentPane.add(txtNrOfHits);
 		
 		hitter = new JButton("Hit Me");
-		hitter.setLocation(70, 30);
-		hitter.setSize(10, 10);
+		//hitter.setBounds(r);
 		hitter.addActionListener(new ButtonListener());
 		contentPane.add(hitter);
 		
 		
 		clear = new JButton("Clear");
-		clear.setSize(20,30);
-		clear.setLocation(10, 10);
+		clear.setBounds(20, 20, 30, 30);
 		clear.addActionListener(new ButtonListener());
 		contentPane.add(clear);
 		

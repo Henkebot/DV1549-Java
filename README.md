@@ -1,1 +1,1 @@
-Testing to edit README.md file
+DV1549-Java lectures at Blekinge Tekniska Högskola (BTH):

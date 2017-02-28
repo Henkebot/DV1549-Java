@@ -1,7 +1,7 @@
 package lektionEtt;
 import java.util.Random;
 
-public class FörstaUppgiften
+public class FirstUppgiften
 {
 	// Bounds
 	private static final int LOWER = 100;

@@ -1,3 +1,7 @@
+/*
+ * Dummy class, to be removed!
+ */
+
 package lektionTre;
 
 import java.awt.Container;
@@ -21,7 +25,7 @@ public class GUIPhoneBook extends JFrame
 		public void actionPerformed(ActionEvent arg0)
 		{
 
-			if (arg0.getActionCommand().equals("Lägg till"))
+			if (arg0.getActionCommand().equals("Lï¿½gg till"))
 			{
 				addPerson();
 			}
@@ -105,7 +109,7 @@ public class GUIPhoneBook extends JFrame
 
 		contentPane.add(phoneNrField);
 
-		addPerson = new JButton("Lägg till");
+		addPerson = new JButton("Lï¿½gg till");
 		addPerson.addActionListener(listener);
 		addPerson.setBounds(20, 270, BOX_WIDTH, BOX_HEIGHT);
 
@@ -116,7 +120,7 @@ public class GUIPhoneBook extends JFrame
 
 		contentPane.add(clear);
 
-		change = new JButton("Ända");
+		change = new JButton("ï¿½nda");
 		change.setBounds(105, 300, BOX_WIDTH, BOX_HEIGHT);
 
 		contentPane.add(change);

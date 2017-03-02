@@ -31,7 +31,7 @@ public class Queue<T> implements IQueue<T>
 	public void enqueue(T element)
 	{
 		if(m_Array.length == (nrOfElements()-1) 
-				|| m_StartIndex == m_EndIndex)
+				|| m_StartIndex == m_EndIndex + 1) // kollar om nästa endIndex är samma som startIndex
 			expand();
 		m_Array[m_EndIndex++ % m_Array.length] = element;
 		
@@ -81,7 +81,7 @@ public class Queue<T> implements IQueue<T>
 	@Override
 	public String[] getAllElementsAsStrings()
 	{
-		int arraySize = nrOfElements() - 1;
+		int arraySize = nrOfElements() -1;
 		int tempStartIndex = m_StartIndex;
 		String[] strArray = new String[arraySize];
 		

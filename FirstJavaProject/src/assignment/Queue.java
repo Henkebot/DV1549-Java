@@ -1,7 +1,14 @@
 package assignment;
 
-public class Queue<T> implements IQueue<T>
+import java.io.Serializable;
+
+public class Queue<T> implements IQueue<T>, Serializable
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -4213936729252545868L;
+	
 	private Object[] m_Array;
 	private int m_StartIndex;
 	private int m_EndIndex;

@@ -30,7 +30,7 @@ public class Level
 		{
 			for (int x = 0; x < m_Width; x++)
 			{
-				int tileIndex = (x /64) + (y/64) * 64;
+				int tileIndex = (x >> 6) + (y>>6) * 64;
 				//System.out.println(tileIndex);
 				m_Pixels[x + y * m_Width] = tiles[tileIndex];
 			}

@@ -103,6 +103,7 @@ public class GUI extends JFrame
 
 	private void updateList()
 	{
+		System.out.println(queue.getAllElementsAsStrings().length);
 		listQueue.setListData(queue.getAllElementsAsStrings());
 	}
 

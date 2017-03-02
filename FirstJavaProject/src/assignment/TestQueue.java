@@ -6,23 +6,11 @@ public class TestQueue
 	public static void main(String[] args)
 	{
 		Queue<Integer> intQ = new Queue<>();
-		for (int i = 0; i < 100; i++)
-		{
-			intQ.enqueue(i);
-			
-		}
-		String[] test = intQ.getAllElementsAsStrings();
-		for (int i = 0; i < test.length; i++)
-		{
-			System.out.print(test[i] + " ");
-			
-		}
-		System.out.println();
-		
-		for (int i = 0; i < 100; i++)
-		{
-			System.out.print(intQ.dequeue() + " ");
-		}
+		intQ.enqueue(20);
+		System.out.println(intQ.getAllElementsAsStrings().length);
+		intQ.dequeue();
+		intQ.enqueue(203);
+		System.out.println(intQ.getAllElementsAsStrings().length);
 		
 	}
 

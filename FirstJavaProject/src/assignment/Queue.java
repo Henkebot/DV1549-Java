@@ -20,7 +20,7 @@ public class Queue<T> implements IQueue<T>
 		int size = 0;
 		
 		if(m_StartIndex < m_EndIndex)
-			size = m_EndIndex + 1;
+			size = m_EndIndex - m_StartIndex;
 		else if(m_StartIndex > m_EndIndex)
 			size = (m_Array.length - m_StartIndex) + m_EndIndex + 1;
 		
@@ -30,7 +30,7 @@ public class Queue<T> implements IQueue<T>
 	@Override
 	public void enqueue(T element)
 	{
-		if(m_Array.length == (nrOfElements()-1) 
+		if(m_Array.length == (nrOfElements()) 
 				|| m_StartIndex == m_EndIndex + 1) // kollar om nästa endIndex är samma som startIndex
 			expand();
 		m_Array[m_EndIndex++ % m_Array.length] = element;
@@ -41,7 +41,7 @@ public class Queue<T> implements IQueue<T>
 	{
 		
 		Object[] temp = new Object[m_Array.length * 2];
-		int arraySize = nrOfElements() - 1;
+		int arraySize = nrOfElements();
 		
 		int newIndex = 0;
 		for (; newIndex < arraySize; newIndex++)
@@ -81,13 +81,17 @@ public class Queue<T> implements IQueue<T>
 	@Override
 	public String[] getAllElementsAsStrings()
 	{
-		int arraySize = nrOfElements() -1;
-		int tempStartIndex = m_StartIndex;
-		String[] strArray = new String[arraySize];
-		
-		for (int newIndex = 0; newIndex < arraySize ; newIndex++)
+		int arraySize = nrOfElements();
+		String[] strArray = new String[0];
+		if(arraySize > 0)
 		{
-			strArray[newIndex] = m_Array[(tempStartIndex++ % m_Array.length)].toString();
+			int tempStartIndex = m_StartIndex;
+			strArray = new String[arraySize];
+			
+			for (int newIndex = 0; newIndex < arraySize; newIndex++)
+			{
+				strArray[newIndex] = m_Array[(tempStartIndex++ % m_Array.length)].toString();
+			}
 		}
 		
 		return strArray;

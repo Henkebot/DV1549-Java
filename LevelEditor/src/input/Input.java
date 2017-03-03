@@ -12,16 +12,17 @@ public class Input implements KeyListener, MouseListener
 	private boolean m_MouseClicked;
 	private boolean m_MouseLeft;
 	private boolean m_MouseRight;
-
-	private boolean up, down, left, right;
-
 	private int m_MouseX;
 	private int m_MouseY;
+	
+	private boolean m_KeyClicked;
+	private boolean up, down, left, right;
 
 	public Input()
 	{
 		key = new boolean[1024];
-
+		
+		m_KeyClicked = false;
 		up = down = left = right = false;
 
 		m_MouseClicked = false;
@@ -37,7 +38,12 @@ public class Input implements KeyListener, MouseListener
 		down = key[KeyEvent.VK_S];
 
 	}
-
+	
+	public boolean isKeyClicked()
+	{
+		return m_KeyClicked;
+	}
+	
 	public boolean isMouseClicked()
 	{
 		return m_MouseClicked;
@@ -56,13 +62,16 @@ public class Input implements KeyListener, MouseListener
 	@Override
 	public void keyPressed(KeyEvent event)
 	{
+		m_KeyClicked = true;
 		key[event.getKeyCode()] = true;
+		
 
 	}
 
 	@Override
 	public void keyReleased(KeyEvent event)
 	{
+		m_KeyClicked = false;
 		key[event.getKeyCode()] = false;
 
 	}

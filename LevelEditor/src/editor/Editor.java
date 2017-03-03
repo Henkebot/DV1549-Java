@@ -3,8 +3,8 @@ package editor;
 import java.awt.Canvas;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.Graphics;
-import java.awt.GridLayout;
 import java.awt.image.BufferStrategy;
 
 import javax.swing.BorderFactory;
@@ -38,7 +38,7 @@ public class Editor extends Canvas implements Runnable
 	private Render render;
 	private Level level;
 	private Input input;
-
+	
 	private boolean isGameRunning;
 
 	private enum TOOL
@@ -57,8 +57,8 @@ public class Editor extends Canvas implements Runnable
 
 	private void initVariables()
 	{
-		render = new Render(WIDTH, HEIGHT);
 		level = new Level(WIDTH, HEIGHT);
+		render = new Render(WIDTH, HEIGHT, level);
 		input = new Input();
 
 		currentTool = TOOL.TEXTURE;
@@ -104,18 +104,18 @@ public class Editor extends Canvas implements Runnable
 
 	private void buildToolbar()
 	{
-		panel.setLayout(new GridLayout(1, 3));
+		panel.setLayout(new FlowLayout());
 		panel.setBorder(BorderFactory.createTitledBorder("Tools"));
-		panel.setLocation(0, HEIGHT - 200);
-		panel.setSize(new Dimension(WIDTH + 10, 210));
+		panel.setLocation(WIDTH - 200,0);
+		panel.setSize(new Dimension(210, HEIGHT));
 
-		JButton button = new JButton("Select Texture");
+		JButton button = new JButton("Select Color");
 		button.setLocation(20, 20);
 		button.setSize(button.getPreferredSize());
 
 		panel.add(button);
 
-		button = new JButton("Place spawns");
+		button = new JButton("Place Objects");
 		button.setLocation(200, 20);
 		button.setSize(button.getPreferredSize());
 		panel.add(button);
@@ -170,6 +170,7 @@ public class Editor extends Canvas implements Runnable
 
 	private void render()
 	{
+		
 		BufferStrategy bs = getBufferStrategy();
 
 		if (bs == null)
@@ -179,7 +180,8 @@ public class Editor extends Canvas implements Runnable
 		}
 
 		Graphics g = bs.getDrawGraphics();
-		//render.clear();
+		
+		render.clear();
 		
 		if (input.isMouseClicked())
 		{
@@ -191,7 +193,16 @@ public class Editor extends Canvas implements Runnable
 			}
 
 		}
-		if (input.isUp()) render.generateSheet();
+		
+		render.draw();
+	
+			if (input.isUp()) render.setOffset(0,-1);
+			if(input.isDown()) render.setOffset(0, 1);
+			if(input.isLeft()) render.setOffset(-1, 0);
+			if(input.isRight()) render.setOffset(1, 0);
+			
+		
+		
 
 		g.drawImage(render.getImage(), 0, 0, getWidth(), getHeight(), null);
 		g.dispose();
@@ -199,14 +210,11 @@ public class Editor extends Canvas implements Runnable
 		bs.show();
 
 	}
-
+	
 	private void update()
 	{
 		input.update();
-
-		
-
-		
+		level.update();
 
 	}
 

@@ -8,7 +8,10 @@ import java.awt.event.MouseListener;
 public class Input implements KeyListener, MouseListener
 {
 	private boolean[] key;
+
 	private boolean m_MouseClicked;
+	private boolean m_MouseLeft;
+	private boolean m_MouseRight;
 
 	private boolean up, down, left, right;
 
@@ -75,14 +78,14 @@ public class Input implements KeyListener, MouseListener
 	public void mouseClicked(MouseEvent arg0)
 	{
 		// Kommer inte att användas
-		
+
 	}
 
 	@Override
 	public void mouseEntered(MouseEvent arg0)
 	{
 		// Kommer inte att användas
-		
+
 	}
 
 	@Override
@@ -94,8 +97,13 @@ public class Input implements KeyListener, MouseListener
 
 	@Override
 	public void mousePressed(MouseEvent event)
-	{	
+	{
 		m_MouseClicked = true;
+
+		if (event.getButton() == MouseEvent.BUTTON1) m_MouseLeft = true;
+
+		if (event.getButton() == MouseEvent.BUTTON3) m_MouseRight = true;
+
 		m_MouseX = event.getX();
 		m_MouseY = event.getY();
 	}
@@ -104,6 +112,39 @@ public class Input implements KeyListener, MouseListener
 	public void mouseReleased(MouseEvent arg0)
 	{
 		m_MouseClicked = false;
+		m_MouseLeft = false;
+		m_MouseRight = false;
 
 	}
+
+	public boolean isMouseLeft()
+	{
+		return m_MouseLeft;
+	}
+
+	public boolean isMouseRight()
+	{
+		return m_MouseRight;
+	}
+
+	public boolean isUp()
+	{
+		return up;
+	}
+
+	public boolean isDown()
+	{
+		return down;
+	}
+
+	public boolean isLeft()
+	{
+		return left;
+	}
+
+	public boolean isRight()
+	{
+		return right;
+	}
+
 }

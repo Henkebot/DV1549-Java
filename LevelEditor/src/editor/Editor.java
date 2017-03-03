@@ -13,7 +13,6 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
-import javax.swing.border.BevelBorder;
 
 import graphics.Render;
 import input.Input;
@@ -38,7 +37,15 @@ public class Editor extends Canvas implements Runnable
 	private Render render;
 	private Level level;
 	private Input input;
+
 	private boolean isGameRunning;
+
+	private enum TOOL
+	{
+		TEXTURE, SPAWN
+	}
+
+	private TOOL currentTool;
 
 	public Editor()
 	{
@@ -52,6 +59,8 @@ public class Editor extends Canvas implements Runnable
 		render = new Render(WIDTH, HEIGHT);
 		level = new Level(WIDTH, HEIGHT);
 		input = new Input();
+
+		currentTool = TOOL.TEXTURE;
 	}
 
 	private void start()
@@ -77,8 +86,9 @@ public class Editor extends Canvas implements Runnable
 		buildMenu();
 
 		buildToolbar();
-		
+
 		this.addMouseListener(input);
+		this.addKeyListener(input);
 		gameFrame.getContentPane().add(panel);
 		gameFrame.add(this);
 		gameFrame.pack();
@@ -93,22 +103,33 @@ public class Editor extends Canvas implements Runnable
 
 	private void buildToolbar()
 	{
-		panel.setLayout(null);
-		panel.setBorder(BorderFactory.createBevelBorder(BevelBorder.LOWERED));
+		panel.setLayout(new GridLayout(1, 3));
+		panel.setBorder(BorderFactory.createTitledBorder("Tools"));
 		panel.setLocation(0, HEIGHT - 200);
-		panel.setSize(new Dimension(WIDTH + 20, 200));
+		panel.setSize(new Dimension(WIDTH + 10, 210));
 
 		JButton button = new JButton("Select Texture");
+		button.setLocation(20, 20);
 		button.setSize(button.getPreferredSize());
 
-		
 		panel.add(button);
+
+		button = new JButton("Place spawns");
+		button.setLocation(200, 20);
+		button.setSize(button.getPreferredSize());
+		panel.add(button);
+
+		button = new JButton("Mark solid");
+		button.setLocation(380, 20);
+		button.setSize(button.getPreferredSize());
+		panel.add(button);
+
 	}
 
 	private void buildMenu()
 	{
 		JMenuBar menuBar = new JMenuBar();
-		//File
+		// File
 		JMenu menu = new JMenu("File");
 		menuBar.add(menu);
 
@@ -122,17 +143,17 @@ public class Editor extends Canvas implements Runnable
 
 		item = new JMenuItem("Exit");
 		menu.add(item);
-		//Help
+		// Help
 		menu = new JMenu("Help");
 		menuBar.add(menu);
-		
+
 		item = new JMenuItem("Controls");
 		gameFrame.setJMenuBar(menuBar);
 		menu.add(item);
-		
+
 		item = new JMenuItem("About");
 		gameFrame.setJMenuBar(menuBar);
-		
+
 		menu.add(item);
 	}
 
@@ -170,11 +191,20 @@ public class Editor extends Canvas implements Runnable
 	private void update()
 	{
 		input.update();
+
 		if (input.isMouseClicked())
 		{
-			level.changeTile(input.getMouseX(), input.getMouseY());
+			if (input.isMouseLeft()) level.changeTile(input.getMouseX(), input.getMouseY());
+
+			if (input.isMouseRight())
+			{
+				level.insertCell(input.getMouseX(), input.getMouseY());
+			}
 
 		}
+
+		if (input.isUp()) level.generateSheet();
+
 	}
 
 }

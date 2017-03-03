@@ -5,6 +5,8 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Graphics;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.image.BufferStrategy;
 
 import javax.swing.BorderFactory;
@@ -24,22 +26,26 @@ public class Editor extends Canvas implements Runnable
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -396852945315248822L;
+	private static final long	serialVersionUID = -396852945315248822L;
 
-	private static final int WIDTH = 1280;
-	private static final int HEIGHT = 720;
+	private static final int	WIDTH			 = 1280;
+	private static final int	HEIGHT			 = 720;
+
+	private static final String	colorBtnTxt		 = "Paint mode";
+	private static final String	resetBtnTxt		 = "Reset level";
+	private static final String	placeEntBtnTxt	 = "Place Entities";
 
 	// Variables
-	private JFrame gameFrame;
-	private JPanel panel;
-	private Thread thread;
-	private Dimension dim;
+	private JFrame				gameFrame;
+	private JPanel				panel;
+	private Thread				thread;
+	private Dimension			dim;
 
-	private Render render;
-	private Level level;
-	private Input input;
-	
-	private boolean isGameRunning;
+	private Render				render;
+	private Level				level;
+	private Input				input;
+
+	private boolean				isGameRunning;
 
 	private enum TOOL
 	{
@@ -106,23 +112,32 @@ public class Editor extends Canvas implements Runnable
 	{
 		panel.setLayout(new FlowLayout());
 		panel.setBorder(BorderFactory.createTitledBorder("Tools"));
-		panel.setLocation(WIDTH - 200,0);
-		panel.setSize(new Dimension(210, HEIGHT));
+		panel.setLocation(WIDTH - 200, 0);
+		panel.setSize(new Dimension(240, HEIGHT));
 
-		JButton button = new JButton("Select Color");
+		TBListener tbList = new TBListener();
+		JButton button = new JButton(colorBtnTxt);
+		Dimension buttonDim = new Dimension(button.getPreferredSize());
+		button.addActionListener(tbList);
 		button.setLocation(20, 20);
-		button.setSize(button.getPreferredSize());
+		button.setSize(buttonDim);
 
 		panel.add(button);
 
-		button = new JButton("Place Objects");
+		button = new JButton(placeEntBtnTxt);
 		button.setLocation(200, 20);
-		button.setSize(button.getPreferredSize());
+		button.setSize(buttonDim);
 		panel.add(button);
 
 		button = new JButton("Mark solid");
 		button.setLocation(380, 20);
-		button.setSize(button.getPreferredSize());
+		button.setSize(buttonDim);
+		panel.add(button);
+
+		button = new JButton(resetBtnTxt);
+		button.addActionListener(tbList);
+		button.setLocation(560, 20);
+		button.setSize(buttonDim);
 		panel.add(button);
 
 	}
@@ -170,7 +185,7 @@ public class Editor extends Canvas implements Runnable
 
 	private void render()
 	{
-		
+
 		BufferStrategy bs = getBufferStrategy();
 
 		if (bs == null)
@@ -180,29 +195,11 @@ public class Editor extends Canvas implements Runnable
 		}
 
 		Graphics g = bs.getDrawGraphics();
-		
+
+		// Clear the screen
 		render.clear();
-		
-		if (input.isMouseClicked())
-		{
-			if (input.isMouseLeft()) render.replaceTileWithColor(input.getMouseX(), input.getMouseY(), Color.blue);
 
-			if (input.isMouseRight())
-			{
-				render.insertCell(input.getMouseX(), input.getMouseY());
-			}
-
-		}
-		
 		render.draw();
-	
-			if (input.isUp()) render.setOffset(0,-1);
-			if(input.isDown()) render.setOffset(0, 1);
-			if(input.isLeft()) render.setOffset(-1, 0);
-			if(input.isRight()) render.setOffset(1, 0);
-			
-		
-		
 
 		g.drawImage(render.getImage(), 0, 0, getWidth(), getHeight(), null);
 		g.dispose();
@@ -210,12 +207,67 @@ public class Editor extends Canvas implements Runnable
 		bs.show();
 
 	}
-	
+
 	private void update()
 	{
 		input.update();
 		level.update();
 
+		// Camera movement
+		if (input.isUp()) render.setOffset(0, -1);
+		if (input.isDown()) render.setOffset(0, 1);
+		if (input.isLeft()) render.setOffset(-1, 0);
+		if (input.isRight()) render.setOffset(1, 0);
+
+		// Mouse inputs
+		if (input.isMouseClicked())
+		{
+			if (input.isMouseLeft()) render.replaceTileWithColor(input.getMouseX(), input.getMouseY(), Color.BLACK);
+
+			if (input.isMouseRight())
+			{
+				render.insertCell(input.getMouseX(), input.getMouseY());
+			}
+
+		}
+
 	}
 
+	private class TBListener implements ActionListener
+	{
+
+		@Override
+		public void actionPerformed(ActionEvent e)
+		{
+			String btnTxt = e.getActionCommand();
+			switch (btnTxt)
+			{
+				case colorBtnTxt:
+					displayColorWindow();
+					break;
+				case resetBtnTxt:
+					resetLevel();
+					break;
+			}
+		}
+
+	}
+
+	public void displayColorWindow()
+	{
+		JFrame frame = new JFrame("Colors");
+		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		frame.setLocationRelativeTo(this);
+		frame.requestFocus();
+
+		JPanel panel = new JPanel();
+		frame.setSize(200, 300);
+		frame.setVisible(true);
+
+	}
+
+	public void resetLevel()
+	{
+		render.generateSheet();
+	}
 }

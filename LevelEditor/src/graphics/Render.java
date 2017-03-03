@@ -10,20 +10,20 @@ import level.Level;
 
 public class Render
 {
-	private static final int TILE_SIZE_2BASE = 6;
-	private static final int TILE_SIZE = 64;
+	private static final int TILE_SIZE_2BASE  = 6;
+	private static final int TILE_SIZE		  = 64;
 	private static final int BORDER_THICKNESS = 5;
-	
-	private int m_Width;
-	private int m_Height;
-	private int[] m_Pixels;
-	private Level m_Level;
-	public int[] tiles;
-	
-	private int m_xOffset;
-	private int m_yOffset;
 
-	private BufferedImage image;
+	private int				 m_Width;
+	private int				 m_Height;
+	private int[]			 m_Pixels;
+	private Level			 m_Level;
+	public int[]			 tiles;
+
+	private int				 m_xOffset;
+	private int				 m_yOffset;
+
+	private BufferedImage	 image;
 
 	public Render(int width, int height, Level level)
 	{
@@ -32,30 +32,30 @@ public class Render
 
 		image = new BufferedImage(m_Width, m_Height, BufferedImage.TYPE_INT_RGB);
 		m_Pixels = ((DataBufferInt) image.getRaster().getDataBuffer()).getData();
-		
-		tiles = new int[TILE_SIZE*TILE_SIZE];
+
+		tiles = new int[TILE_SIZE * TILE_SIZE];
 		m_Level = level;
 		generateSheet();
 
 	}
-	
+
 	public void setOffset(int x, int y)
 	{
 		m_xOffset -= x;
 		m_yOffset -= y;
 	}
-	
+
 	public void replaceTileWithColor(int x, int y, Color color)
 	{
 		x -= m_xOffset;
 		y -= m_yOffset;
-		
+
 		int startY = (y >> TILE_SIZE_2BASE) << TILE_SIZE_2BASE;
 		int yCondition = ((y >> TILE_SIZE_2BASE) << TILE_SIZE_2BASE) + TILE_SIZE;
-		
+
 		int startX = (x >> TILE_SIZE_2BASE) << TILE_SIZE_2BASE;
 		int xCondition = ((x >> TILE_SIZE_2BASE) << TILE_SIZE_2BASE) + TILE_SIZE;
-		
+
 		for (int y0 = startY; y0 < yCondition; y0++)
 		{
 			for (int x0 = startX; x0 < xCondition; x0++)
@@ -66,7 +66,7 @@ public class Render
 		}
 
 	}
-	
+
 	public void generateSheet()
 	{
 		int color = 0;
@@ -84,12 +84,12 @@ public class Render
 			}
 		}
 	}
-	
+
 	public void insertCell(int x, int y)
 	{
 		x -= m_xOffset;
 		y -= m_yOffset;
-		
+
 		int startY = (y >> TILE_SIZE_2BASE) << TILE_SIZE_2BASE;
 		int yCondition = ((y >> TILE_SIZE_2BASE) << TILE_SIZE_2BASE) + TILE_SIZE;
 
@@ -113,7 +113,7 @@ public class Render
 		}
 
 	}
-	
+
 	private void generateBoxes()
 	{
 		for (int i = 0; i < 64 * 64; i++)
@@ -135,9 +135,9 @@ public class Render
 	{
 		for (int i = 0; i < m_Level.getMap().length; i++)
 		{
-			//m_Level.getMap()[i] = 0;
+			// m_Level.getMap()[i] = 0;
 		}
-		
+
 		for (int i = 0; i < m_Pixels.length; i++)
 		{
 			m_Pixels[i] = 0;
@@ -146,19 +146,20 @@ public class Render
 
 	public void draw()
 	{
-		
+
 		drawEntities();
 		drawLevel();
-		
+
 	}
+
 	private void drawEntities()
 	{
-		
+
 		Entity entity = m_Level.getEntities().get(0);
-		
+
 		int xScroll = entity.getX();
 		int yScroll = entity.getY();
-		
+
 		for (int y = 0; y < entity.getSize(); y++)
 		{
 			int ya = y + yScroll;
@@ -168,27 +169,25 @@ public class Render
 				m_Level.getMap()[xa + ya * m_Width] = entity.getPixels()[x + y * entity.getSize()];
 			}
 		}
-		
-		
+
 	}
 
 	private void drawLevel()
 	{
-		
-		
-		
+
 		for (int y = 0; y < m_Height; y++)
 		{
 			int ya = y + m_yOffset;
 			for (int x = 0; x < m_Width; x++)
 			{
 				int xa = x + m_xOffset;
-				if(xa < 0 || xa >= m_Width || ya < 0 || ya >= m_Height) continue;
+				if (xa < 0 || xa >= m_Width || ya < 0 || ya >= m_Height) continue;
 				m_Pixels[xa + ya * m_Width] = m_Level.getMap()[x + y * m_Width];
 			}
 		}
-		
+
 	}
+
 	public BufferedImage getImage()
 	{
 		return image;

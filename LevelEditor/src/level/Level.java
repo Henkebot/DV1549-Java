@@ -8,34 +8,33 @@ import entity.Player;
 
 public class Level
 {
-	private int m_Width;
-	private int m_Height;
-	
-	private int[] mapCoords;
-	
+	private int				  m_Width;
+	private int				  m_Height;
+
+	private int[]			  mapCoords;
+
 	private ArrayList<Entity> entities;
-	
 
 	public Level(int width, int height)
 	{
 		m_Width = width;
 		m_Height = height;
-		
-		mapCoords = new int[m_Width*m_Height];
-		
+
+		mapCoords = new int[m_Width * m_Height];
+
 		loadMobs();
-		
+
 		generateEmptyMap();
 
 	}
-	
+
 	private void loadMobs()
 	{
 		entities = new ArrayList<>();
-		entities.add(new Player(300,400,Color.green));
-		
+		entities.add(new Player(300, 400, Color.green));
+
 	}
-	
+
 	public void update()
 	{
 		for (Entity entity : entities)
@@ -54,12 +53,12 @@ public class Level
 			}
 		}
 	}
-	
+
 	public ArrayList<Entity> getEntities()
 	{
 		return entities;
 	}
-	
+
 	public int[] getMap()
 	{
 		return mapCoords;

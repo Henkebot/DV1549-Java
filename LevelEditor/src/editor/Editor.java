@@ -3,6 +3,7 @@ package editor;
 import java.awt.Canvas;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.GridLayout;
 import java.awt.image.BufferStrategy;
 
 import javax.swing.BorderFactory;
@@ -96,13 +97,13 @@ public class Editor extends Canvas implements Runnable
 		menu.add(item);
 		gameFrame.setJMenuBar(menuBar);
 
-		panel.setLayout(null);
+		panel.setLayout(new GridLayout(1,3));
 		panel.setBorder(BorderFactory.createTitledBorder("Tools"));
-		panel.setLocation(0, HEIGHT - 200);
+		panel.setLocation(5, HEIGHT - 200);
 		panel.setSize(new Dimension(WIDTH, 200));
 
 		JButton button = new JButton("Select Texture");
-		//button.addMouseListener(input);
+		
 		button.setSize(button.getPreferredSize());
 
 		panel.add(button);

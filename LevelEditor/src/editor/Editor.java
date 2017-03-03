@@ -1,6 +1,7 @@
 package editor;
 
 import java.awt.Canvas;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.GridLayout;
@@ -178,8 +179,19 @@ public class Editor extends Canvas implements Runnable
 		}
 
 		Graphics g = bs.getDrawGraphics();
-		render.clear();
-		render.draw(level);
+		//render.clear();
+		
+		if (input.isMouseClicked())
+		{
+			if (input.isMouseLeft()) render.replaceTileWithColor(input.getMouseX(), input.getMouseY(), Color.blue);
+
+			if (input.isMouseRight())
+			{
+				render.insertCell(input.getMouseX(), input.getMouseY());
+			}
+
+		}
+		if (input.isUp()) render.generateSheet();
 
 		g.drawImage(render.getImage(), 0, 0, getWidth(), getHeight(), null);
 		g.dispose();
@@ -192,18 +204,9 @@ public class Editor extends Canvas implements Runnable
 	{
 		input.update();
 
-		if (input.isMouseClicked())
-		{
-			if (input.isMouseLeft()) level.changeTile(input.getMouseX(), input.getMouseY());
+		
 
-			if (input.isMouseRight())
-			{
-				level.insertCell(input.getMouseX(), input.getMouseY());
-			}
-
-		}
-
-		if (input.isUp()) level.generateSheet();
+		
 
 	}
 

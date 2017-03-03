@@ -1,17 +1,29 @@
 package level;
 
 import java.awt.Color;
+import java.io.Serializable;
 import java.util.ArrayList;
 
 import entity.Entity;
 import entity.Player;
 
-public class Level
+public class Level implements Serializable
 {
+	/**
+	 * Allt för att få bort varningen
+	 */
+	private static final long serialVersionUID = 1L;
+	
+	public static final int BLOCK_NOT_SOLID = 0;
+	public static final int BLOCK_SOLID = 1;
+	
 	private int				  m_Width;
 	private int				  m_Height;
 
-	private int[]			  mapCoords;
+	private int[]			  mapPixels;
+	private int[][]			  blockMap;
+	
+	
 
 	private ArrayList<Entity> entities;
 
@@ -20,18 +32,41 @@ public class Level
 		m_Width = width;
 		m_Height = height;
 
-		mapCoords = new int[m_Width * m_Height];
+		mapPixels = new int[m_Width * m_Height];
+		blockMap = new int[m_Width / 64][m_Height / 64];
+		
+		for (int x = 0; x < m_Width / 64; x++)
+		{
+			for (int y = 0; y < m_Height / 64; y++)
+			{
+				blockMap[x][y] = BLOCK_NOT_SOLID;
+			}
+		}
 
 		loadMobs();
 
 		generateEmptyMap();
 
 	}
+	public void changePlayerSpawn(int x, int y)
+	{
+		entities.get(0).setX(((x / 64) * 64) + 20);
+		entities.get(0).setY(((y / 64) * 64) + 20);
+	}
+	public int getHeight()
+	{
+		return m_Height;
+	}
+
+	public int getWidth()
+	{
+		return m_Width;
+	}
 
 	private void loadMobs()
 	{
 		entities = new ArrayList<>();
-		entities.add(new Player(300, 400, Color.green));
+		entities.add(new Player(20, 20, Color.green));
 
 	}
 
@@ -49,7 +84,7 @@ public class Level
 		{
 			for (int x = 0; x < m_Width; x++)
 			{
-				mapCoords[x + y * m_Width] = 0;
+				mapPixels[x + y * m_Width] = 0;
 			}
 		}
 	}
@@ -61,7 +96,12 @@ public class Level
 
 	public int[] getMap()
 	{
-		return mapCoords;
+		return mapPixels;
+	}
+	
+	public int[][] getBlockMap()
+	{
+		return blockMap;
 	}
 
 }

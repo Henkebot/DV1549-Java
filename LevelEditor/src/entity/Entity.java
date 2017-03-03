@@ -34,7 +34,18 @@ public abstract class Entity
 	{
 		return m_EntityPixels;
 	}
-
+	
+	public void setX(int x)
+	{
+		m_xPos = x;
+	}
+	
+	public void setY(int y)
+	{
+		m_yPos = y;
+	}
+	
+	
 	public int getX()
 	{
 		return m_xPos;

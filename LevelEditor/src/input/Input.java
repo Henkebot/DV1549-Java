@@ -16,7 +16,7 @@ public class Input implements KeyListener, MouseListener
 	private int m_MouseY;
 	
 	private boolean m_KeyClicked;
-	private boolean up, down, left, right;
+	public static boolean up, down, left, right;
 
 	public Input()
 	{

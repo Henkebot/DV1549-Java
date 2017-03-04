@@ -5,12 +5,12 @@ import game.Game;
 
 public class GUI
 {
-	private Game		  game;
+	private static Game	  game;
 	private static Editor editor;
 
 	public static void main(String[] args)
 	{
-		System.out.println("Starting editor!");
-		editor = new Editor();
+		//editor = new Editor();
+		game = new Game("sample_level");
 	}
 }

@@ -42,8 +42,8 @@ public class Render
 
 	public void setOffset(int x, int y)
 	{
-		m_xOffset -= x;
-		m_yOffset -= y;
+		m_xOffset = x;
+		m_yOffset = y;
 	}
 
 	public void replaceTileWithColor(int x, int y, Color color)
@@ -82,6 +82,7 @@ public class Render
 			return;
 
 		m_Level.getColorMap()[xTile][yTile] = Level.COLOR_NONE;
+		m_Level.getBlockMap()[xTile][yTile] = Level.BLOCK_NOT_USED;
 
 	}
 

@@ -5,9 +5,20 @@ import java.io.Serializable;
 
 public abstract class Entity implements Serializable
 {
+	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private Color m_Color;
 	protected int m_xPos;
 	protected int m_yPos;
+	
+	protected int m_xReq;
+	protected int m_yReq;
+	
+	protected boolean xAllowed;
+	protected boolean yAllowed;
 
 	private int	  m_Size;
 	private int[] m_EntityPixels;
@@ -16,7 +27,7 @@ public abstract class Entity implements Serializable
 	{
 		m_xPos = x;
 		m_yPos = y;
-		m_Color = color;
+		setM_Color(color);
 
 		m_Size = 32;
 
@@ -28,8 +39,23 @@ public abstract class Entity implements Serializable
 		}
 
 	}
+	
+	public int getXReq()
+	{
+		return m_xReq;
+	}
+	
+	public int getYReq()
+	{
+		return m_yReq;
+	}
 
-	public abstract void move();
+	public abstract void requestMov();
+	public void move()
+	{
+		if(xAllowed) m_xPos = m_xReq;
+		if(yAllowed) m_yPos = m_yReq;
+	}
 
 	public int[] getPixels()
 	{
@@ -59,5 +85,25 @@ public abstract class Entity implements Serializable
 	public int getSize()
 	{
 		return m_Size;
+	}
+
+	public Color getM_Color()
+	{
+		return m_Color;
+	}
+
+	public void setM_Color(Color m_Color)
+	{
+		this.m_Color = m_Color;
+	}
+	
+	public void setXBool(boolean b)
+	{
+		xAllowed = b;
+	}
+	
+	public void setYBool(boolean b)
+	{
+		yAllowed = b;
 	}
 }

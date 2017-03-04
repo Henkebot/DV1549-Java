@@ -1,8 +1,9 @@
 package entity;
 
 import java.awt.Color;
+import java.io.Serializable;
 
-public class Enemy extends Entity
+public class Enemy extends Entity implements Serializable
 {
 
 	public Enemy(int x, int y, Color color)

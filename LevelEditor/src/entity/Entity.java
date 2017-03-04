@@ -1,8 +1,9 @@
 package entity;
 
 import java.awt.Color;
+import java.io.Serializable;
 
-public abstract class Entity
+public abstract class Entity implements Serializable
 {
 	private Color m_Color;
 	protected int m_xPos;
@@ -34,18 +35,17 @@ public abstract class Entity
 	{
 		return m_EntityPixels;
 	}
-	
+
 	public void setX(int x)
 	{
 		m_xPos = x;
 	}
-	
+
 	public void setY(int y)
 	{
 		m_yPos = y;
 	}
-	
-	
+
 	public int getX()
 	{
 		return m_xPos;

@@ -5,9 +5,9 @@ import game.Game;
 
 public class GUI
 {
-	private Game game;
+	private Game		  game;
 	private static Editor editor;
-	
+
 	public static void main(String[] args)
 	{
 		System.out.println("Starting editor!");

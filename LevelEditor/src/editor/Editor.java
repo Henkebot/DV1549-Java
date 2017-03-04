@@ -8,6 +8,12 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferStrategy;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -20,7 +26,6 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
-import entity.Entity;
 import graphics.Render;
 import input.Input;
 import level.Level;
@@ -39,6 +44,9 @@ public class Editor extends Canvas implements Runnable
 	private static final String	resetBtnTxt		 = "Reset level";
 	private static final String	placeEntBtnTxt	 = "Place Entities";
 
+	private static final String	newMap			 = "New level";
+	private static final String	saveToFiletxt	 = "Save level";
+	private static final String	loadFromTileTxt	 = "Load level";
 	private static final String	exitTxt			 = "Exit";
 
 	private int					coolInt			 = 1;
@@ -83,7 +91,7 @@ public class Editor extends Canvas implements Runnable
 		selectedColor = Color.black;
 		list = new JList<>();
 
-		level = new Level(20 * 64, 10 * 64);
+		level = new Level(10 * 64, 20 * 64);
 		render = new Render(WIDTH, HEIGHT, level);
 		input = new Input();
 
@@ -178,10 +186,12 @@ public class Editor extends Canvas implements Runnable
 		JMenu menu = new JMenu("File");
 		menuBar.add(menu);
 
-		JMenuItem item = new JMenuItem("Load from file");
+		JMenuItem item = new JMenuItem(loadFromTileTxt);
+		item.addActionListener(mnuList);
 		menu.add(item);
 
-		item = new JMenuItem("Save to file");
+		item = new JMenuItem(saveToFiletxt);
+		item.addActionListener(mnuList);
 		menu.add(item);
 
 		menu.addSeparator();
@@ -254,10 +264,9 @@ public class Editor extends Canvas implements Runnable
 		Graphics g = bs.getDrawGraphics();
 
 		// Clear the screen
-		
+
 		render.clear(coolInt);
 		render.draw();
-
 
 		g.drawImage(render.getImage(), 0, 0, getWidth(), getHeight(), null);
 		g.dispose();
@@ -272,6 +281,7 @@ public class Editor extends Canvas implements Runnable
 		level.update();
 
 		// Camera movement
+		render.setOffset(0, 0);
 		if (input.isUp()) render.setOffset(0, -5);
 		if (input.isDown()) render.setOffset(0, 5);
 		if (input.isLeft()) render.setOffset(-5, 0);
@@ -290,13 +300,16 @@ public class Editor extends Canvas implements Runnable
 					switch (listContent[index])
 					{
 						case "Red":
-							selectedColor = Color.MAGENTA;
+							selectedColor = Color.red;
 							break;
 						case "Blue":
 							selectedColor = Color.blue;
 							break;
 						case "Gray":
 							selectedColor = Color.gray;
+							break;
+						case "Orange":
+							selectedColor = Color.orange;
 							break;
 						default:
 							selectedColor = Color.red;
@@ -310,19 +323,28 @@ public class Editor extends Canvas implements Runnable
 					render.removeTile(input.getMouseX(), input.getMouseY());
 				}
 			}
-			else if(currentTool == TOOL.ENTITY)
+			else if (currentTool == TOOL.ENTITY)
 			{
-				if(input.isMouseLeft())
+				if (input.isMouseLeft())
 				{
 					int index = list.getSelectedIndex();
-					if(index  == -1) index = 0;
-					switch(listContent[index])
+					if (index == -1) index = 0;
+					switch (listContent[index])
 					{
 						case "Player":
-							Entity player = level.getEntities().get(0);
-							level.changePlayerSpawn(input.getMouseX()- render.getOffsets()[0], input.getMouseY()- render.getOffsets()[1]);
+							level.changePlayerSpawn(input.getMouseX() - render.getOffsets()[0],
+									input.getMouseY() - render.getOffsets()[1]);
+							break;
+						case "Enemy":
+							level.addEnemy(input.getMouseX() - render.getOffsets()[0],
+									input.getMouseY() - render.getOffsets()[1]);
 							break;
 					}
+				}
+				else if (input.isMouseRight())
+				{
+					level.removeEnemy(input.getMouseX() - render.getOffsets()[0],
+							input.getMouseY() - render.getOffsets()[1]);
 				}
 			}
 
@@ -339,6 +361,12 @@ public class Editor extends Canvas implements Runnable
 
 			switch (e.getActionCommand())
 			{
+				case saveToFiletxt:
+					saveToFile();
+					break;
+				case loadFromTileTxt:
+					loadFromFile();
+					break;
 				case exitTxt:
 					System.exit(0);
 					break;
@@ -376,13 +404,69 @@ public class Editor extends Canvas implements Runnable
 		currentTool = TOOL.COLOR;
 		crntToolTxt.setText("Current tool: Paint Mode");
 
-		listContent = new String[] { "Red", "Blue", "Gray" };
+		listContent = new String[] { "Red", "Blue", "Gray", "Orange" };
 		list.setSize(200, 300);
 		list.setListData(listContent);
 		list.setBorder(BorderFactory.createTitledBorder("Selected a color"));
 		toolsFeatures.add(list);
 		toolsFeatures.setVisible(true);
 		toolsFeatures.setBorder(BorderFactory.createTitledBorder("Colors"));
+	}
+
+	public void loadFromFile()
+	{
+		String name = JOptionPane.showInputDialog("Filename");
+
+		try
+		{
+			ObjectInputStream input = new ObjectInputStream(new FileInputStream("./" + name + ".map"));
+			try
+			{
+				System.out.println("Köres");
+				System.out.println("Old level: " + level.getWidth());
+				level = new Level((Level) input.readObject());
+				render = new Render(WIDTH, HEIGHT, level);
+				System.out.println("New level: " + level.getWidth());
+
+				input.close();
+			} catch (ClassNotFoundException e)
+			{
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		} catch (FileNotFoundException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+	}
+
+	public void saveToFile()
+	{
+
+		String name = JOptionPane.showInputDialog("Filename:");
+
+		try
+		{
+			ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream("./" + name + ".map"));
+
+			out.writeObject(level);
+			out.close();
+		} catch (FileNotFoundException e)
+		{
+
+			e.printStackTrace();
+		} catch (IOException e)
+		{
+
+			e.printStackTrace();
+		}
+
 	}
 
 	public void displayEntityWindow()
@@ -404,6 +488,10 @@ public class Editor extends Canvas implements Runnable
 	{
 		int value = JOptionPane.showConfirmDialog(gameFrame, "Are you sure you wanna reset the level?", "Reset Level",
 				JOptionPane.YES_NO_OPTION);
-		if (value == JOptionPane.YES_OPTION) level.resetColorMap();
+		if (value == JOptionPane.YES_OPTION)
+		{
+			level.resetColorMap();
+			level.removeAllEnemies();
+		}
 	}
 }

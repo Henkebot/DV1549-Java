@@ -13,17 +13,18 @@ public class Level implements Serializable
 	 * Allt för att få bort varningen
 	 */
 	private static final long serialVersionUID = 1L;
-	
-	public static final int BLOCK_NOT_SOLID = 0;
-	public static final int BLOCK_SOLID = 1;
-	
+
+	public static final int	  BLOCK_NOT_USED   = 0;
+	public static final int	  BLOCK_NOT_SOLID  = 1;
+	public static final int	  BLOCK_SOLID	   = 2;
+
+	public static final int	  COLOR_NONE	   = 0;
+
 	private int				  m_Width;
 	private int				  m_Height;
 
-	private int[]			  mapPixels;
 	private int[][]			  blockMap;
-	
-	
+	private int[][]			  colorMap;
 
 	private ArrayList<Entity> entities;
 
@@ -32,27 +33,43 @@ public class Level implements Serializable
 		m_Width = width;
 		m_Height = height;
 
-		mapPixels = new int[m_Width * m_Height];
 		blockMap = new int[m_Width / 64][m_Height / 64];
-		
+		colorMap = new int[m_Width >> 6][m_Height >> 6];
 		for (int x = 0; x < m_Width / 64; x++)
 		{
 			for (int y = 0; y < m_Height / 64; y++)
 			{
-				blockMap[x][y] = BLOCK_NOT_SOLID;
+				blockMap[x][y] = BLOCK_NOT_USED;
+			}
+		}
+		
+		for (int x = 0; x < colorMap.length; x++)
+		{
+			for (int y = 0; y < colorMap[x].length; y++)
+			{
+				colorMap[x][y] = COLOR_NONE;
 			}
 		}
 
 		loadMobs();
 
-		generateEmptyMap();
-
+	}
+	public void resetColorMap()
+	{
+		for (int x = 0; x < colorMap.length; x++)
+		{
+			for (int y = 0; y < colorMap[x].length; y++)
+			{
+				colorMap[x][y] = COLOR_NONE;
+			}
+		}
 	}
 	public void changePlayerSpawn(int x, int y)
 	{
 		entities.get(0).setX(((x / 64) * 64) + 20);
 		entities.get(0).setY(((y / 64) * 64) + 20);
 	}
+
 	public int getHeight()
 	{
 		return m_Height;
@@ -78,30 +95,20 @@ public class Level implements Serializable
 		}
 	}
 
-	public void generateEmptyMap()
-	{
-		for (int y = 0; y < m_Height; y++)
-		{
-			for (int x = 0; x < m_Width; x++)
-			{
-				mapPixels[x + y * m_Width] = 0;
-			}
-		}
-	}
-
 	public ArrayList<Entity> getEntities()
 	{
 		return entities;
 	}
 
-	public int[] getMap()
-	{
-		return mapPixels;
-	}
-	
 	public int[][] getBlockMap()
 	{
 		return blockMap;
 	}
+	
+	public int[][] getColorMap()
+	{
+		return colorMap;
+	}
+	
 
 }

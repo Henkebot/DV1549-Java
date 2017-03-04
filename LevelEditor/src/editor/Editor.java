@@ -232,7 +232,7 @@ public class Editor extends Canvas implements Runnable
 
 			if (System.currentTimeMillis() - lastTimeMilli > 1000)
 			{
-				System.out.println("Ticks " + tick + " Frames " + frames);
+				gameFrame.setTitle("Editor | Ticks " + tick + " Frames " + frames);
 				tick = 0;
 				frames = 0;
 				lastTimeMilli += 1000;
@@ -254,9 +254,10 @@ public class Editor extends Canvas implements Runnable
 		Graphics g = bs.getDrawGraphics();
 
 		// Clear the screen
+		
 		render.clear(coolInt);
-
 		render.draw();
+
 
 		g.drawImage(render.getImage(), 0, 0, getWidth(), getHeight(), null);
 		g.dispose();
@@ -274,7 +275,7 @@ public class Editor extends Canvas implements Runnable
 		if (input.isUp()) render.setOffset(0, -5);
 		if (input.isDown()) render.setOffset(0, 5);
 		if (input.isLeft()) render.setOffset(-5, 0);
-		if (input.isRight()) render.setOffset(+5, 0);
+		if (input.isRight()) render.setOffset(5, 0);
 
 		// Mouse inputs
 		if (input.isMouseClicked())
@@ -289,7 +290,7 @@ public class Editor extends Canvas implements Runnable
 					switch (listContent[index])
 					{
 						case "Red":
-							selectedColor = Color.red;
+							selectedColor = Color.MAGENTA;
 							break;
 						case "Blue":
 							selectedColor = Color.blue;
@@ -306,7 +307,7 @@ public class Editor extends Canvas implements Runnable
 
 				if (input.isMouseRight())
 				{
-					render.insertCell(input.getMouseX(), input.getMouseY());
+					render.removeTile(input.getMouseX(), input.getMouseY());
 				}
 			}
 			else if(currentTool == TOOL.ENTITY)
@@ -319,7 +320,6 @@ public class Editor extends Canvas implements Runnable
 					{
 						case "Player":
 							Entity player = level.getEntities().get(0);
-							render.insertCell(player.getX(), player.getY());
 							level.changePlayerSpawn(input.getMouseX()- render.getOffsets()[0], input.getMouseY()- render.getOffsets()[1]);
 							break;
 					}
@@ -404,6 +404,6 @@ public class Editor extends Canvas implements Runnable
 	{
 		int value = JOptionPane.showConfirmDialog(gameFrame, "Are you sure you wanna reset the level?", "Reset Level",
 				JOptionPane.YES_NO_OPTION);
-		if (value == JOptionPane.YES_OPTION) render.generateSheet();
+		if (value == JOptionPane.YES_OPTION) level.resetColorMap();
 	}
 }

@@ -11,6 +11,6 @@ public class GUI
 	public static void main(String[] args)
 	{
 		//editor = new Editor();
-		game = new Game("sample_level");
+		game = new Game("jumpTest");
 	}
 }

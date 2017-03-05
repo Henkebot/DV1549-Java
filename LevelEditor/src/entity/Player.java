@@ -23,7 +23,7 @@ public class Player extends Entity implements Serializable
 	public void requestMov()
 	{
 		changeX = 0;
-		// changeY = 0;
+		
 
 		if (Input.left) changeX -= SPEED;
 		if (Input.right) changeX += SPEED;
@@ -33,16 +33,19 @@ public class Player extends Entity implements Serializable
 			changeY = 0;
 			if (Input.up)
 			{
-				changeY = -12;
+				changeY -= 18;
 			}
 		}
 		else
 		{
 			changeY += 1;
 		}
-		m_yReq = (int) (m_yPos + changeY);
 		
-		m_xReq = m_xPos + changeX;
+			m_yReq = (int) (m_yPos + changeY);
+			
+			m_xReq = m_xPos + changeX;
+			
+			
 		
 	}
 

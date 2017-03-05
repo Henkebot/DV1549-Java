@@ -20,8 +20,8 @@ public abstract class Entity implements Serializable
 	protected int			  m_xReq;
 	protected int			  m_yReq;
 
-	protected int				  changeX		   = 0;
-	protected double			  changeY		   = 0;
+	protected int			  changeX		   = 0;
+	protected double		  changeY		   = 0;
 
 	protected boolean		  xAllowed;
 	protected boolean		  yAllowed;
@@ -61,8 +61,10 @@ public abstract class Entity implements Serializable
 	public void move()
 	{
 		if (xAllowed) m_xPos = m_xReq;
-		m_yPos = m_yReq;
-		
+		if (yAllowed) 
+		{
+			m_yPos = m_yReq;
+		}
 	}
 
 	public int[] getPixels()
@@ -109,7 +111,12 @@ public abstract class Entity implements Serializable
 	{
 		xAllowed = b;
 	}
-
+	
+	public boolean yBoolStatus()
+	{
+		return yAllowed;
+	}
+	
 	public void setYBool(boolean b)
 	{
 		yAllowed = b;

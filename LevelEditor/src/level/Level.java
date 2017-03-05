@@ -1,6 +1,7 @@
 package level;
 
 import java.awt.Color;
+import java.awt.Rectangle;
 import java.io.Serializable;
 import java.util.ArrayList;
 
@@ -169,19 +170,31 @@ public class Level implements Serializable
 		entity.setXBool(true);
 		entity.setYBool(true);
 
-		int xCoord = entity.getXReq() >> 6;
-		int yCoord = (entity.getYReq() + entity.getSize()) >> 6;
-		
-		if(blockMap[xCoord][yCoord] == BLOCK_SOLID)
+		Rectangle recXLeft = new Rectangle();
+		recXLeft.setLocation(entity.getXReq(), entity.getY());
+		recXLeft.setSize(entity.getSize(), entity.getSize());
+
+		Rectangle recXRight = new Rectangle();
+		recXRight.setLocation(entity.getXReq() + entity.getSize(), entity.getY());
+		recXRight.setSize(entity.getSize(), entity.getSize());
+
+		Rectangle recYBottom = new Rectangle();
+		recYBottom.setLocation(entity.getX(), entity.getYReq() + entity.getSize());
+		recYBottom.setSize(entity.getSize(), entity.getSize());
+
+		Rectangle recYTop = new Rectangle();
+		recYTop.setLocation(entity.getX(), entity.getYReq());
+		recYTop.setSize(entity.getSize(), entity.getSize());
+
+		if (blockMap[recYBottom.x >> 6][recYBottom.y >> 6] == BLOCK_SOLID) entity.setYBool(false);
+		if (blockMap[recXLeft.x >> 6][recXLeft.y >> 6] == BLOCK_SOLID) entity.setXBool(false);
+		if (blockMap[recXRight.x >> 6][recXRight.y >> 6] == BLOCK_SOLID) entity.setXBool(false);
+		if (blockMap[recYTop.x >> 6][recYTop.y >> 6] == BLOCK_SOLID)
 		{
-			entity.setYBool(false);
-			yCoord = entity.getYReq() >> 6;
-			if(blockMap[xCoord][yCoord] == BLOCK_SOLID)
-			{
-				entity.setYBool(true);
-			}
+			if(!entity.yBoolStatus())
+				entity.setYBool(false);
+
 		}
-		
 
 	}
 

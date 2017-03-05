@@ -45,7 +45,11 @@ public abstract class Entity implements Serializable
 		}
 
 	}
-
+	public boolean isJumping()
+	{
+		
+		return changeY<0;
+	}
 	public int getXReq()
 	{
 		return m_xReq;
@@ -61,10 +65,7 @@ public abstract class Entity implements Serializable
 	public void move()
 	{
 		if (xAllowed) m_xPos = m_xReq;
-		if (yAllowed) 
-		{
-			m_yPos = m_yReq;
-		}
+		if(yAllowed) m_yPos = m_yReq;
 	}
 
 	public int[] getPixels()

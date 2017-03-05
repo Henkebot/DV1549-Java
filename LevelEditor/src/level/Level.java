@@ -170,32 +170,41 @@ public class Level implements Serializable
 		entity.setXBool(true);
 		entity.setYBool(true);
 
-		Rectangle recXLeft = new Rectangle();
-		recXLeft.setLocation(entity.getXReq(), entity.getY());
-		recXLeft.setSize(entity.getSize(), entity.getSize());
+		Rectangle rectX = new Rectangle();
+		rectX.setLocation(entity.getXReq(), entity.getY());
+		rectX.setSize(entity.getSize(), entity.getSize());
 
-		Rectangle recXRight = new Rectangle();
-		recXRight.setLocation(entity.getXReq() + entity.getSize(), entity.getY());
-		recXRight.setSize(entity.getSize(), entity.getSize());
+		Rectangle rectY = new Rectangle();
+		rectY.setLocation(entity.getX(), entity.getYReq());
+		rectY.setSize(entity.getSize(), entity.getSize());
 
-		Rectangle recYBottom = new Rectangle();
-		recYBottom.setLocation(entity.getX(), entity.getYReq() + entity.getSize());
-		recYBottom.setSize(entity.getSize(), entity.getSize());
-
-		Rectangle recYTop = new Rectangle();
-		recYTop.setLocation(entity.getX(), entity.getYReq());
-		recYTop.setSize(entity.getSize(), entity.getSize());
-
-		if (blockMap[recYBottom.x >> 6][recYBottom.y >> 6] == BLOCK_SOLID) entity.setYBool(false);
-		if (blockMap[recXLeft.x >> 6][recXLeft.y >> 6] == BLOCK_SOLID) entity.setXBool(false);
-		if (blockMap[recXRight.x >> 6][recXRight.y >> 6] == BLOCK_SOLID) entity.setXBool(false);
-		if (blockMap[recYTop.x >> 6][recYTop.y >> 6] == BLOCK_SOLID)
+		for (int x = (entity.getX() >> 6) - 1; x < (entity.getX() >> 6) + 2; x++)
 		{
-			if(!entity.yBoolStatus())
-				entity.setYBool(false);
+			for (int y = (entity.getY() >> 6) - 1; y < (entity.getY() >> 6) + 2; y++)
+			{
+				if (x < 0 || y >= 20) continue;
+				if (blockMap[x][y] == BLOCK_SOLID)
+				{
+					int top = y << 6;
+					int left = x << 6;
 
+					Rectangle tile = new Rectangle();
+					tile.setLocation(left, top);
+					tile.setSize(64, 64);
+					// colorMap[rectX.x >> 6][rectX.y >> 6] = 0xffffff;
+					if (rectX.intersects(tile))
+					{
+						entity.setXBool(false);
+
+					}
+					if (tile.intersects(rectY))
+					{
+						if (!entity.isJumping()) entity.setYBool(false);
+
+					}
+				}
+			}
 		}
-
 	}
 
 	public ArrayList<Entity> getEntities()

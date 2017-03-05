@@ -168,18 +168,20 @@ public class Level implements Serializable
 	{
 		entity.setXBool(true);
 		entity.setYBool(true);
+
 		int xCoord = entity.getXReq() >> 6;
-		int yCoord = entity.getYReq() >> 6;
-
-		// left side
-		if (blockMap[xCoord][yCoord] == BLOCK_SOLID) entity.setXBool(false);
-
-		// right side
-		xCoord = (entity.getXReq() + entity.getSize()) >> 6;
-		if (blockMap[xCoord][yCoord] == BLOCK_SOLID) entity.setXBool(false);
-		xCoord = entity.getXReq() >> 6;
-		yCoord = (entity.getYReq() + entity.getSize()) >> 6;
-		if (blockMap[xCoord][yCoord] == BLOCK_SOLID) entity.setYBool(false);
+		int yCoord = (entity.getYReq() + entity.getSize()) >> 6;
+		
+		if(blockMap[xCoord][yCoord] == BLOCK_SOLID)
+		{
+			entity.setYBool(false);
+			yCoord = entity.getYReq() >> 6;
+			if(blockMap[xCoord][yCoord] == BLOCK_SOLID)
+			{
+				entity.setYBool(true);
+			}
+		}
+		
 
 	}
 

@@ -144,7 +144,6 @@ public class Render
 	{
 		drawLevel();
 		drawEntities();
-		generateSheet();
 
 	}
 

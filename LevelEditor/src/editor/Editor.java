@@ -280,6 +280,7 @@ public class Editor extends Canvas implements Runnable
 
 		render.clear(coolClear);
 		render.draw();
+		render.generateSheet();
 
 		g.drawImage(render.getImage(), 0, 0, getWidth(), getHeight(), null);
 		g.dispose();

@@ -71,7 +71,7 @@ public class Game extends Canvas implements Runnable
 		mainFrame.setResizable(false);
 		mainFrame.setLocationRelativeTo(null);
 		mainFrame.setTitle("Game");
-		mainFrame.requestFocus();
+		
 		mainFrame.setVisible(true);
 
 	}
@@ -126,7 +126,7 @@ public class Game extends Canvas implements Runnable
 		int updates = 0;
 		int frames = 0;
 		double lastTimeMilli = System.currentTimeMillis();
-
+		requestFocus();
 		while (isGameRunning)
 		{
 			long nowNano = System.nanoTime();

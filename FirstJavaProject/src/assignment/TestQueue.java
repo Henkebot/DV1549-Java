@@ -3,6 +3,7 @@ package assignment;
 public class TestQueue
 {
 	final static int ARRAY_SIZE = 10;
+
 	public static void main(String[] args)
 	{
 		Queue<Integer> intQ = new Queue<>();
@@ -11,7 +12,7 @@ public class TestQueue
 		intQ.dequeue();
 		intQ.enqueue(203);
 		System.out.println(intQ.getAllElementsAsStrings().length);
-		
+
 	}
 
 }

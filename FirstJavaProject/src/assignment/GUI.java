@@ -6,10 +6,8 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.FileInputStream;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.ObjectInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -27,22 +25,22 @@ import javax.swing.JTextField;
 
 public class GUI extends JFrame
 {
-	private static final int WIDTH 	= 300;
-	private static final int HEIGHT = 600;
+	private static final int	WIDTH			= 300;
+	private static final int	HEIGHT			= 600;
 
-	private static final String addBtnText 		= "Add";
-	private static final String showFirstText 	= "Show First";
-	private static final String showRemoveText 	= "Remove first";
+	private static final String	addBtnText		= "Add";
+	private static final String	showFirstText	= "Show First";
+	private static final String	showRemoveText	= "Remove first";
 
-	private static final String loadFromFileTxt = "Load from file";
-	private static final String saveToFileTxt 	= "Save to file";
-	private static final String exitTxt 		= "Exit";
+	private static final String	loadFromFileTxt	= "Load from file";
+	private static final String	saveToFileTxt	= "Save to file";
+	private static final String	exitTxt			= "Exit";
 
-	private JTextField inputField;
-	private Container contentPane;
-	private JList<String> listQueue;
+	private JTextField			inputField;
+	private Container			contentPane;
+	private JList<String>		listQueue;
 
-	private Queue<Integer> queue;
+	private Queue<Integer>		queue;
 
 	private class ButtonListener implements ActionListener
 	{
@@ -51,15 +49,15 @@ public class GUI extends JFrame
 		{
 			switch (event.getActionCommand())
 			{
-			case addBtnText:
-				addValueToQueue();
-				break;
-			case showFirstText:
-				displayFirst();
-				break;
-			case showRemoveText:
-				removeAndDisplayFirst();
-				break;
+				case addBtnText:
+					addValueToQueue();
+					break;
+				case showFirstText:
+					displayFirst();
+					break;
+				case showRemoveText:
+					removeAndDisplayFirst();
+					break;
 			}
 		}
 	}
@@ -70,18 +68,18 @@ public class GUI extends JFrame
 		@Override
 		public void actionPerformed(ActionEvent event)
 		{
-			
+
 			switch (event.getActionCommand())
 			{
-			case loadFromFileTxt: 
-				loadFromFile();
-				break;
-			case saveToFileTxt:
-				saveToFile();
-				break;
-			case exitTxt:
-				System.exit(0);
-				break;
+				case loadFromFileTxt:
+					loadFromFile();
+					break;
+				case saveToFileTxt:
+					saveToFile();
+					break;
+				case exitTxt:
+					System.exit(0);
+					break;
 			}
 		}
 
@@ -90,6 +88,7 @@ public class GUI extends JFrame
 	public GUI(String title)
 	{
 		super(title);
+
 		initFields();
 		createFrame();
 		configureFrame();
@@ -102,69 +101,78 @@ public class GUI extends JFrame
 		try
 		{
 			ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream("./" + filePath + ".dat"));
-			
+
 			out.writeObject(queue);
+
 			out.close();
-			
+
 			JOptionPane.showMessageDialog(contentPane, "Successfully saved to file!");
-		} catch (FileNotFoundException e)
+		}
+		catch (FileNotFoundException e)
 		{
-			
-			e.printStackTrace();
-		} catch (IOException e)
-		{
-			
+
 			e.printStackTrace();
 		}
-		
+		catch (IOException e)
+		{
+
+			e.printStackTrace();
+		}
+
 	}
 
 	public void loadFromFile()
 	{
 		String filePath = JOptionPane.showInputDialog(contentPane, "Please enter the filename: ");
-		
+
 		ObjectInputStream input;
 		try
 		{
 			input = new ObjectInputStream(new FileInputStream("./" + filePath + ".dat"));
+
 			queue = (Queue) input.readObject();
+
 			input.close();
+
 			updateList();
-		} catch (FileNotFoundException e)
+		}
+		catch (FileNotFoundException e)
 		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ClassNotFoundException e)
-		{
-			// TODO Auto-generated catch block
+
 			e.printStackTrace();
 		}
-		
-		
+		catch (IOException e)
+		{
+
+			e.printStackTrace();
+		}
+		catch (ClassNotFoundException e)
+		{
+
+			e.printStackTrace();
+		}
+
 	}
 
 	public void removeAndDisplayFirst()
 	{
 		String displayText = "The Queue is currently empty!";
-		
-		if (!queue.isEmpty()) displayText = "Removed " + queue.dequeue() + " from the queue!";
-		
+
+		if (!queue.isEmpty())
+			displayText = "Removed " + queue.dequeue() + " from the queue!";
+
 		JOptionPane.showMessageDialog(contentPane, displayText);
-		
+
 		updateList();
 	}
 
 	public void displayFirst()
 	{
 		String displayText = "The queue is currently empty!";
+
 		if (!queue.isEmpty())
-		{
 			displayText = "The first Integer is " + queue.front() + ".";
-		}
+
 		JOptionPane.showMessageDialog(contentPane, displayText);
 
 	}
@@ -182,7 +190,7 @@ public class GUI extends JFrame
 			queue.enqueue(Integer.parseInt(integer));
 			updateList();
 		}
-		
+
 		inputField.setText(""); // Reset inputField
 
 	}
@@ -267,7 +275,7 @@ public class GUI extends JFrame
 	{
 		JMenuBar menuBar = new JMenuBar();
 		MenuListener mnuListener = new MenuListener();
-		
+
 		JMenu menu = new JMenu("File");
 		menuBar.add(menu);
 
@@ -293,6 +301,7 @@ public class GUI extends JFrame
 		setLocationRelativeTo(null);
 
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
+
 	}
 
 	private void initFields()
@@ -306,6 +315,9 @@ public class GUI extends JFrame
 	public static void main(String[] args)
 	{
 		GUI gui = new GUI("Integer Queue");
+		/*
+		 * Får knapparna att synas, det funka inte när jag skrev det i createFrame()
+		 */
 		gui.setVisible(true);
 	}
 }

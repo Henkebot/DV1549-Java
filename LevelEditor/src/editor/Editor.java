@@ -48,7 +48,7 @@ public class Editor extends Canvas implements Runnable
 	private static final String	MNU_TXT_NEW		 = "New level";
 	private static final String	MNU_TXT_SAVE	 = "Save level";
 	private static final String	MNU_TXT_LOAD	 = "Load level";
-	private static final String	MNU_TXT_EXIT	 = "Exit";
+	private static final String	MNU_TXT_EXIT	 = "Exit Editor";
 
 	private static final String	MNU_TXT_CONTROL	 = "Controls";
 	private static final String	MNU_TXT_ABOUT	 = "About";
@@ -81,14 +81,14 @@ public class Editor extends Canvas implements Runnable
 
 	private TOOL currentTool;
 
-	public Editor()
+	public Editor(String levelPath)
 	{
-		initVariables();
+		initVariables(levelPath);
 		createWindow();
 		start();
 	}
 
-	private void initVariables()
+	private void initVariables(String levelPath)
 	{
 		mainFrame = new JFrame();
 		toolsPanel = new JPanel();
@@ -96,14 +96,45 @@ public class Editor extends Canvas implements Runnable
 		dim = new Dimension(WIDTH, HEIGHT);
 		selectedColor = Color.black;
 		list = new JList<>();
-
-		level = new Level(10 * 64, 20 * 64);
+		
+		if(levelPath == "")
+			level = new Level(10 * 64, 20 * 64);
+		else 
+			loadLevelFromFile(levelPath);
 		render = new Render(WIDTH, HEIGHT, level);
 		input = new Input();
 		cameraX = cameraY = 0;
 
 		crntToolTxt = new JLabel("Current tool: None");
 		currentTool = TOOL.NONE;
+	}
+
+	private void loadLevelFromFile(String levelPath)
+	{
+		try
+		{
+			ObjectInputStream input = new ObjectInputStream(new FileInputStream("./levels/" + levelPath + ".level"));
+			try
+			{
+				level = new Level((Level) input.readObject());
+
+				input.close();
+
+			} catch (ClassNotFoundException e)
+			{
+
+				e.printStackTrace();
+			}
+		} catch (FileNotFoundException e)
+		{
+			System.err.println(levelPath + " was not valid");
+			e.printStackTrace();
+		} catch (IOException e)
+		{
+
+			e.printStackTrace();
+		}
+		
 	}
 
 	private void start()
@@ -128,11 +159,12 @@ public class Editor extends Canvas implements Runnable
 
 		this.addMouseListener(input);
 		this.addKeyListener(input);
+
 		mainFrame.getContentPane().add(toolsPanel);
 		mainFrame.getContentPane().add(toolsFeatures);
 		mainFrame.add(this);
 		mainFrame.pack();
-		mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		mainFrame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 		mainFrame.setResizable(false);
 		mainFrame.setLocationRelativeTo(null);
 		mainFrame.setTitle("Editor");
@@ -292,75 +324,114 @@ public class Editor extends Canvas implements Runnable
 	private void update()
 	{
 		input.update();
-		//level.update();
+		// level.update();
 
 		// Camera movement
 		render.setOffset(cameraX, cameraY);
-		if (input.isUp()) cameraY+=5;
-		if (input.isDown()) cameraY-=5;
-		if (input.isLeft()) cameraX+=5;
-		if (input.isRight()) cameraX-=5;
+		if (input.isUp())
+			cameraY += 5;
+		if (input.isDown())
+			cameraY -= 5;
+		if (input.isLeft())
+			cameraX += 5;
+		if (input.isRight())
+			cameraX -= 5;
 
 		// Mouse inputs
 		if (input.isMouseClicked())
 		{
-			if (currentTool == TOOL.COLOR)
+			switch (currentTool)
 			{
 
-				if (input.isMouseLeft())
+				case COLOR:
 				{
-					int index = list.getSelectedIndex();
-					if (index == -1) index = 0;
-					switch (listContent[index])
+					if (input.isMouseLeft())
 					{
-						case "Red":
-							selectedColor = Color.red;
-							break;
-						case "Blue":
-							selectedColor = Color.blue;
-							break;
-						case "Gray":
-							selectedColor = Color.gray;
-							break;
-						case "Orange":
-							selectedColor = Color.orange;
-							break;
-						default:
-							selectedColor = Color.red;
+						int index = list.getSelectedIndex();
+						if (index == -1)
+							index = 0;
+						switch (listContent[index])
+						{
+							case "Red":
+								selectedColor = Color.red;
+								break;
+							case "Blue":
+								selectedColor = Color.blue;
+								break;
+							case "Gray":
+								selectedColor = Color.gray;
+								break;
+							case "Orange":
+								selectedColor = Color.orange;
+								break;
+							default:
+								selectedColor = Color.red;
+						}
+						render.replaceTileWithColor(input.getMouseX(), input.getMouseY(), selectedColor);
+
 					}
-					render.replaceTileWithColor(input.getMouseX(), input.getMouseY(), selectedColor);
 
-				}
+					if (input.isMouseRight())
+						render.removeTile(input.getMouseX(), input.getMouseY());
 
-				if (input.isMouseRight())
-				{
-					System.out.println("True");
-					render.removeTile(input.getMouseX(), input.getMouseY());
+					break;
 				}
-			}
-			else if (currentTool == TOOL.ENTITY)
-			{
-				if (input.isMouseLeft())
+				case ENTITY:
 				{
-					int index = list.getSelectedIndex();
-					if (index == -1) index = 0;
-					switch (listContent[index])
+
+					if (input.isMouseLeft())
 					{
-						case "Player":
-							level.changePlayerSpawn(input.getMouseX() - render.getOffsets()[0],
-									input.getMouseY() - render.getOffsets()[1]);
-							break;
-						case "Enemy":
-							level.addEnemy(input.getMouseX() - render.getOffsets()[0],
-									input.getMouseY() - render.getOffsets()[1]);
-							break;
+						int index = list.getSelectedIndex();
+						if (index == -1)
+							index = 0;
+						switch (listContent[index])
+						{
+							case "Player":
+								level.changePlayerSpawn(input.getMouseX() - render.getOffsets()[0],
+										input.getMouseY() - render.getOffsets()[1]);
+								break;
+							case "Enemy":
+								level.addEnemy(input.getMouseX() - render.getOffsets()[0],
+										input.getMouseY() - render.getOffsets()[1]);
+								break;
+						}
 					}
+					else if (input.isMouseRight())
+					{
+						level.removeEnemy(input.getMouseX() - render.getOffsets()[0],
+								input.getMouseY() - render.getOffsets()[1]);
+					}
+					break;
 				}
-				else if (input.isMouseRight())
+				case MARK:
 				{
-					level.removeEnemy(input.getMouseX() - render.getOffsets()[0],
-							input.getMouseY() - render.getOffsets()[1]);
+					if (input.isMouseLeft())
+					{
+						int index = list.getSelectedIndex();
+						if (index == -1)
+							index = 0;
+						switch (listContent[index])
+						{
+							case "Solid":
+							{
+								render.changeBlockType(input.getMouseX(), input.getMouseY(), Level.BLOCK_SOLID);
+								break;
+							}
+							case "Not Solid":
+							{
+								render.changeBlockType(input.getMouseX(), input.getMouseY(), Level.BLOCK_NOT_SOLID);
+								break;
+							}
+							case "Dangerous":
+							{
+								render.changeBlockType(input.getMouseX(), input.getMouseY(), Level.BLOCK_DANGEROUS);
+								break;
+							}
+						}
+					}
+					break;
 				}
+
 			}
 
 		}
@@ -430,7 +501,7 @@ public class Editor extends Canvas implements Runnable
 	{
 		currentTool = TOOL.COLOR;
 		crntToolTxt.setText("Current tool: Paint Mode");
-
+		render.renderMode = Render.MODE.COLOR;
 		listContent = new String[] { "Red", "Blue", "Gray", "Orange" };
 		list.setSize(200, 300);
 		list.setListData(listContent);
@@ -444,6 +515,7 @@ public class Editor extends Canvas implements Runnable
 	{
 		currentTool = TOOL.MARK;
 		crntToolTxt.setText("Current tool: Mark mode");
+		render.renderMode = Render.MODE.MARK;
 
 		listContent = new String[] { "Solid", "Not Solid", "Dangerous" };
 		list.setSize(200, 300);
@@ -491,7 +563,7 @@ public class Editor extends Canvas implements Runnable
 
 		try
 		{
-			ObjectInputStream input = new ObjectInputStream(new FileInputStream("./" + name + ".level"));
+			ObjectInputStream input = new ObjectInputStream(new FileInputStream("./levels/" + name + ".level"));
 			try
 			{
 
@@ -501,17 +573,20 @@ public class Editor extends Canvas implements Runnable
 				JOptionPane.showMessageDialog(this, name + ".level successfully loaded!");
 
 				input.close();
-			} catch (ClassNotFoundException e)
+			}
+			catch (ClassNotFoundException e)
 			{
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-		} catch (FileNotFoundException e)
+		}
+		catch (FileNotFoundException e)
 		{
 			JOptionPane.showMessageDialog(this, "Couldn't open " + name + ".level !");
 
 			e.printStackTrace();
-		} catch (IOException e)
+		}
+		catch (IOException e)
 		{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -526,16 +601,18 @@ public class Editor extends Canvas implements Runnable
 
 		try
 		{
-			ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream("./" + name + ".level"));
+			ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream("./levels/" + name + ".level"));
 
 			out.writeObject(level);
 			out.close();
-			JOptionPane.showMessageDialog(this, "Level successfully saved!\nPath: ./" + name + ".level");
-		} catch (FileNotFoundException e)
+			JOptionPane.showMessageDialog(this, "Level successfully saved!\nPath: ./levels/" + name + ".level");
+		}
+		catch (FileNotFoundException e)
 		{
 
 			e.printStackTrace();
-		} catch (IOException e)
+		}
+		catch (IOException e)
 		{
 
 			e.printStackTrace();
@@ -547,6 +624,7 @@ public class Editor extends Canvas implements Runnable
 	{
 		currentTool = TOOL.ENTITY;
 		crntToolTxt.setText("Current tool: Place Entities");
+		render.renderMode = Render.MODE.COLOR;
 
 		listContent = new String[] { "Player", "Enemy" };
 		list.setSize(200, 300);

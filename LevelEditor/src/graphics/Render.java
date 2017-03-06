@@ -9,28 +9,33 @@ import level.Level;
 
 public class Render
 {
-	private static final int TILE_SIZE_2BASE = 6;
-	private static final int TILE_SIZE		 = 64;
 
-	private int				 m_Width;
-	private int				 m_Height;
-	private int[]			 m_Pixels;
-	private Level			 m_Level;
-	public int[]			 tiles;
+	private int			  m_Width;
+	private int			  m_Height;
+	private int[]		  m_Pixels;
+	public int[]		  tiles;
+	private BufferedImage image;
 
-	private int				 m_xOffset;
-	private int				 m_yOffset;
+	private int			  m_xOffset;
+	private int			  m_yOffset;
 
-	private BufferedImage	 image;
+	public static enum MODE
+	{
+		COLOR, MARK
+	}
+
+	public MODE	  renderMode;
+	private Level m_Level;
 
 	public Render(int width, int height, Level level)
 	{
+		renderMode = MODE.COLOR;
 		m_Width = width;
 		m_Height = height;
 
 		image = new BufferedImage(m_Width, m_Height, BufferedImage.TYPE_INT_RGB);
 		m_Pixels = ((DataBufferInt) image.getRaster().getDataBuffer()).getData();
-		tiles = new int[TILE_SIZE * TILE_SIZE];
+		tiles = new int[Level.TILE_SIZE_PIX * Level.TILE_SIZE_PIX];
 		m_Level = level;
 
 	}
@@ -50,15 +55,15 @@ public class Render
 	{
 		x -= m_xOffset;
 		y -= m_yOffset;
-		int startY = (y >> TILE_SIZE_2BASE) << TILE_SIZE_2BASE;
+		int startY = (y >> Level.TILE_SIZE_2BASE) << Level.TILE_SIZE_2BASE;
 
-		int startX = (x >> TILE_SIZE_2BASE) << TILE_SIZE_2BASE;
+		int startX = (x >> Level.TILE_SIZE_2BASE) << Level.TILE_SIZE_2BASE;
 
-		int xTile = (startX >> TILE_SIZE_2BASE);
-		int yTile = (startY >> TILE_SIZE_2BASE);
+		int xTile = (startX >> Level.TILE_SIZE_2BASE);
+		int yTile = (startY >> Level.TILE_SIZE_2BASE);
 
-		if (xTile < 0 || xTile >= m_Level.getWidth() >> TILE_SIZE_2BASE || yTile < 0
-				|| yTile >= m_Level.getHeight() >> TILE_SIZE_2BASE)
+		if (xTile < 0 || xTile >= m_Level.getWidth() >> Level.TILE_SIZE_2BASE || yTile < 0
+				|| yTile >= m_Level.getHeight() >> Level.TILE_SIZE_2BASE)
 			return;
 
 		m_Level.getBlockMap()[xTile][yTile] = Level.BLOCK_SOLID;
@@ -66,19 +71,40 @@ public class Render
 
 	}
 
+	public void changeBlockType(int x, int y, int type)
+	{
+		x -= m_xOffset;
+		y -= m_yOffset;
+		int startY = (y >> Level.TILE_SIZE_2BASE) << Level.TILE_SIZE_2BASE;
+
+		int startX = (x >> Level.TILE_SIZE_2BASE) << Level.TILE_SIZE_2BASE;
+
+		int xTile = (startX >> Level.TILE_SIZE_2BASE);
+		int yTile = (startY >> Level.TILE_SIZE_2BASE);
+
+		if (xTile < 0 || xTile >= m_Level.getWidth() >> Level.TILE_SIZE_2BASE || yTile < 0
+				|| yTile >= m_Level.getHeight() >> Level.TILE_SIZE_2BASE)
+			return;
+
+		if (m_Level.getColorMap()[xTile][yTile] == Level.COLOR_NONE)
+			return;
+
+		m_Level.getBlockMap()[xTile][yTile] = type;
+	}
+
 	public void removeTile(int x, int y)
 	{
 		x -= m_xOffset;
 		y -= m_yOffset;
-		int startY = (y >> TILE_SIZE_2BASE) << TILE_SIZE_2BASE;
+		int startY = (y >> Level.TILE_SIZE_2BASE) << Level.TILE_SIZE_2BASE;
 
-		int startX = (x >> TILE_SIZE_2BASE) << TILE_SIZE_2BASE;
+		int startX = (x >> Level.TILE_SIZE_2BASE) << Level.TILE_SIZE_2BASE;
 
-		int xTile = (startX >> TILE_SIZE_2BASE);
-		int yTile = (startY >> TILE_SIZE_2BASE);
+		int xTile = (startX >> Level.TILE_SIZE_2BASE);
+		int yTile = (startY >> Level.TILE_SIZE_2BASE);
 
-		if (xTile < 0 || xTile >= m_Level.getWidth() >> TILE_SIZE_2BASE || yTile < 0
-				|| yTile >= m_Level.getHeight() >> TILE_SIZE_2BASE)
+		if (xTile < 0 || xTile >= m_Level.getWidth() >> Level.TILE_SIZE_2BASE || yTile < 0
+				|| yTile >= m_Level.getHeight() >> Level.TILE_SIZE_2BASE)
 			return;
 
 		m_Level.getColorMap()[xTile][yTile] = Level.COLOR_NONE;
@@ -88,13 +114,14 @@ public class Render
 
 	public void generateSheet()
 	{
-		for (int y = 0; y < m_Level.getHeight(); y += 64)
+		for (int y = 0; y < m_Level.getHeight(); y += Level.TILE_SIZE_PIX)
 		{
 			int ya = y + m_yOffset;
 			for (int x = 0; x < m_Level.getWidth(); x += 3)
 			{
 				int xa = x + m_xOffset;
-				if (xa < 0 || xa >= m_Width || ya < 0 || ya >= m_Height) continue;
+				if (xa < 0 || xa >= m_Width || ya < 0 || ya >= m_Height)
+					continue;
 
 				m_Pixels[xa + ya * m_Width] = 0xffffff;
 			}
@@ -102,10 +129,11 @@ public class Render
 		for (int y = 0; y < m_Level.getHeight(); y += 3)
 		{
 			int ya = y + m_yOffset;
-			for (int x = 0; x < m_Level.getWidth(); x += 64)
+			for (int x = 0; x < m_Level.getWidth(); x += Level.TILE_SIZE_PIX)
 			{
 				int xa = x + m_xOffset;
-				if (xa < 0 || xa >= m_Width || ya < 0 || ya >= m_Height) continue;
+				if (xa < 0 || xa >= m_Width || ya < 0 || ya >= m_Height)
+					continue;
 
 				m_Pixels[xa + ya * m_Width] = 0xffffff;
 			}
@@ -125,7 +153,7 @@ public class Render
 		{
 			for (int x = 0; x < m_Width; x++)
 			{
-				int tileIndex = (x >> 6) + (y >> 6) * 64;
+				int tileIndex = (x >> Level.TILE_SIZE_2BASE) + (y >> Level.TILE_SIZE_2BASE) << Level.TILE_SIZE_2BASE;
 				m_Pixels[x + y * m_Width] = tiles[tileIndex];
 			}
 		}
@@ -164,7 +192,8 @@ public class Render
 				for (int x = 0; x < entity.getSize(); x++)
 				{
 					int xa = x + xScroll;
-					if (xa >= m_Width || xa < 0 || ya >= m_Height || ya < 0) continue;
+					if (xa >= m_Width || xa < 0 || ya >= m_Height || ya < 0)
+						continue;
 					m_Pixels[xa + ya * m_Width] = entity.getPixels()[x + y * entity.getSize()];
 				}
 			}
@@ -174,19 +203,50 @@ public class Render
 
 	private void drawLevel()
 	{
-
-		for (int y = 0; y < m_Level.getHeight(); y++)
+		if (renderMode == MODE.COLOR)
 		{
-			int ya = y + m_yOffset;
-			for (int x = 0; x < m_Level.getWidth(); x++)
+			for (int y = 0; y < m_Level.getHeight(); y++)
 			{
-				int xa = x + m_xOffset;
-				if (xa < 0 || xa >= m_Width || ya < 0 || ya >= m_Height) continue;
-				if (m_Level.getColorMap()[x >> TILE_SIZE_2BASE][y >> TILE_SIZE_2BASE] != Level.COLOR_NONE)
-					m_Pixels[xa + ya * m_Width] = m_Level.getColorMap()[x >> TILE_SIZE_2BASE][y >> TILE_SIZE_2BASE];
+				int ya = y + m_yOffset;
+				for (int x = 0; x < m_Level.getWidth(); x++)
+				{
+					int xa = x + m_xOffset;
+					if (xa < 0 || xa >= m_Width || ya < 0 || ya >= m_Height)
+						continue;
+					if (m_Level
+							.getColorMap()[x >> Level.TILE_SIZE_2BASE][y >> Level.TILE_SIZE_2BASE] != Level.COLOR_NONE)
+						m_Pixels[xa + ya * m_Width] = m_Level
+								.getColorMap()[x >> Level.TILE_SIZE_2BASE][y >> Level.TILE_SIZE_2BASE];
+				}
+			}
+
+		}
+		else if (renderMode == MODE.MARK)
+		{
+			for (int y = 0; y < m_Level.getHeight(); y += 2)
+			{
+				int ya = y + m_yOffset;
+				for (int x = 0; x < m_Level.getWidth(); x += 2)
+				{
+					int xa = x + m_xOffset;
+					if (xa < 0 || xa >= m_Width || ya < 0 || ya >= m_Height)
+						continue;
+					switch (m_Level.getBlockMap()[x >> Level.TILE_SIZE_2BASE][y >> Level.TILE_SIZE_2BASE])
+					{
+						case Level.BLOCK_SOLID:
+							m_Pixels[xa + ya * m_Width] = Color.CYAN.getRGB();
+							break;
+						case Level.BLOCK_NOT_SOLID:
+							m_Pixels[xa + ya * m_Width] = Color.WHITE.getRGB();
+							break;
+						case Level.BLOCK_DANGEROUS:
+							m_Pixels[xa + ya * m_Width] = Color.RED.getRGB();
+							break;
+					}
+				}
+
 			}
 		}
-
 	}
 
 	public BufferedImage getImage()

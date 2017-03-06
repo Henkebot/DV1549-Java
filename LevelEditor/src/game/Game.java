@@ -67,7 +67,7 @@ public class Game extends Canvas implements Runnable
 
 		mainFrame.add(this);
 		mainFrame.pack();
-		mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		mainFrame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 		mainFrame.setResizable(false);
 		mainFrame.setLocationRelativeTo(null);
 		mainFrame.setTitle("Game");
@@ -93,7 +93,7 @@ public class Game extends Canvas implements Runnable
 	{
 		try
 		{
-			ObjectInputStream input = new ObjectInputStream(new FileInputStream("./" + levelPath + ".level"));
+			ObjectInputStream input = new ObjectInputStream(new FileInputStream("./levels/" + levelPath + ".level"));
 			try
 			{
 				level = new Level((Level) input.readObject());

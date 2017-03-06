@@ -90,8 +90,7 @@ public class Queue<T> implements IQueue<T>, Serializable
 	@Override
 	public String[] getAllElementsAsStrings()
 	{
-		if (isEmpty())
-			throw new IndexOutOfBoundsException("Call on getAllElementsAsStrings() with empty array");
+
 		int arraySize = nrOfElements();
 		String[] strArray = new String[0];
 		if (arraySize > 0)

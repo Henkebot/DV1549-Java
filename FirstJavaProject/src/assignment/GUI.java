@@ -40,7 +40,7 @@ public class GUI extends JFrame
 	private Container			contentPane;
 	private JList<String>		listQueue;
 
-	private Queue<Integer>		queue;
+	private IQueue<Integer>		queue;
 
 	private class ButtonListener implements ActionListener
 	{
@@ -156,22 +156,34 @@ public class GUI extends JFrame
 
 	public void removeAndDisplayFirst()
 	{
-		String displayText = "The Queue is currently empty!";
+		String displayText = "";
 
-		if (!queue.isEmpty())
+		try
+		{
 			displayText = "Removed " + queue.dequeue() + " from the queue!";
+			updateList();
+		}
+		catch (IndexOutOfBoundsException e)
+		{
+			displayText = "The Queue is currently empty!";
+		}
 
 		JOptionPane.showMessageDialog(contentPane, displayText);
 
-		updateList();
 	}
 
 	public void displayFirst()
 	{
-		String displayText = "The queue is currently empty!";
+		String displayText = "";
 
-		if (!queue.isEmpty())
+		try
+		{
 			displayText = "The first Integer is " + queue.front() + ".";
+		}
+		catch (IndexOutOfBoundsException e)
+		{
+			displayText = "The queue is currently empty!";
+		}
 
 		JOptionPane.showMessageDialog(contentPane, displayText);
 
@@ -197,7 +209,9 @@ public class GUI extends JFrame
 
 	private void updateList()
 	{
+
 		listQueue.setListData(queue.getAllElementsAsStrings());
+
 	}
 
 	private void configureFrame()
@@ -316,7 +330,8 @@ public class GUI extends JFrame
 	{
 		GUI gui = new GUI("Integer Queue");
 		/*
-		 * Får knapparna att synas, det funka inte när jag skrev det i createFrame()
+		 * Får knapparna att synas, det funka inte när jag skrev det i
+		 * createFrame()
 		 */
 		gui.setVisible(true);
 	}

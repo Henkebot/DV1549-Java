@@ -3,6 +3,8 @@ package game;
 import java.awt.Canvas;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.awt.image.BufferStrategy;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -22,20 +24,20 @@ public class Game extends Canvas implements Runnable
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private static final int WIDTH	= 1280;
-	private static final int HEIGHT	= 720;
+	private static final int  WIDTH			   = 1280;
+	private static final int  HEIGHT		   = 720;
 
-	private String			 levelPath;
-	private JFrame			 mainFrame;
-	private Dimension		 dim;
-	private Thread			 thread;
+	private String			  levelPath;
+	private JFrame			  mainFrame;
+	private Dimension		  dim;
+	private Thread			  thread;
 
-	private Level			 level;
-	private Render			 render;
-	private static Input	 input;
+	private Level			  level;
+	private Render			  render;
+	private static Input	  input;
 
-	private boolean			 isGameRunning;
-	private int				 coolClear;
+	private boolean			  isGameRunning;
+	private int				  coolClear;
 
 	public Game(String levelPath)
 	{
@@ -67,11 +69,21 @@ public class Game extends Canvas implements Runnable
 
 		mainFrame.add(this);
 		mainFrame.pack();
-		mainFrame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+		
+		mainFrame.addWindowListener(new WindowAdapter()
+		{
+			@Override
+			public void windowClosing(WindowEvent e)
+			{
+				isGameRunning = false;
+				mainFrame.dispose();
+			}
+		});
+		
 		mainFrame.setResizable(false);
 		mainFrame.setLocationRelativeTo(null);
 		mainFrame.setTitle("Game");
-		
+
 		mainFrame.setVisible(true);
 
 	}
@@ -100,16 +112,19 @@ public class Game extends Canvas implements Runnable
 
 				input.close();
 
-			} catch (ClassNotFoundException e)
+			}
+			catch (ClassNotFoundException e)
 			{
 
 				e.printStackTrace();
 			}
-		} catch (FileNotFoundException e)
+		}
+		catch (FileNotFoundException e)
 		{
 			System.err.println(levelPath + " was not valid");
 			e.printStackTrace();
-		} catch (IOException e)
+		}
+		catch (IOException e)
 		{
 
 			e.printStackTrace();
@@ -179,10 +194,10 @@ public class Game extends Canvas implements Runnable
 	{
 		input.update();
 		level.update();
-		
+
 		int xOffset = level.getEntities().get(Level.PLAYER_INDEX).getX() - (WIDTH / 2);
 		int yOffset = level.getEntities().get(Level.PLAYER_INDEX).getY() - 500;
-		
+
 		render.setOffset(-xOffset, -yOffset - 200);
 
 	}

@@ -6,10 +6,12 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JList;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 
 import editor.Editor;
 import game.Game;
@@ -19,11 +21,14 @@ public class GUI extends JFrame
 	private Game				game;
 	private Editor				editor;
 
-	private static final int	WIDTH		  = 300;
-	private static final int	HEIGHT		  = 300;
+	private static final int	WIDTH			= 300;
+	private static final int	HEIGHT			= 300;
 
-	private static final String	BTN_TXT_EDITOR = "Start Editor";
-	private static final String BTN_TXT_GAME = "Start Game";
+	private static final String	BTN_TXT_EDITOR	= "Start Editor";
+	private static final String	BTN_TXT_GAME	= "Start Game";
+	private static final String	BTN_TXT_REFRESH	= "Refresh";
+
+	private JButton				gameButton;
 
 	private Container			contentPane;
 	private JList<String>		levelList;
@@ -52,16 +57,24 @@ public class GUI extends JFrame
 
 		panel.add(button);
 
-		button = new JButton(BTN_TXT_GAME);
+		gameButton = new JButton(BTN_TXT_GAME);
+		if (levels.length == 0) gameButton.setEnabled(false);
+		gameButton.addActionListener(new BtnListener());
+		gameButton.setLocation(150, 10);
+		gameButton.setSize(button.getPreferredSize());
+
+		panel.add(gameButton);
+
+		button = new JButton(BTN_TXT_REFRESH);
 		button.addActionListener(new BtnListener());
-		button.setLocation(150, 10);
+		button.setLocation(20, 90);
 		button.setSize(button.getPreferredSize());
 
 		panel.add(button);
 
 		contentPane.add(panel);
 
-		contentPane.add(levelList);
+		contentPane.add(new JScrollPane(levelList));
 
 	}
 
@@ -93,6 +106,7 @@ public class GUI extends JFrame
 				levels[index++] = file.getName().substring(0, file.getName().indexOf("."));
 			}
 		}
+		levelList.setBorder(BorderFactory.createTitledBorder("Levels"));
 		levelList.setListData(levels);
 	}
 
@@ -115,6 +129,9 @@ public class GUI extends JFrame
 				case BTN_TXT_EDITOR:
 					startEditor();
 					break;
+				case BTN_TXT_REFRESH:
+					updateList();
+					break;
 			}
 		}
 	}
@@ -126,6 +143,27 @@ public class GUI extends JFrame
 			index = 0;
 		game = new Game(levels[index]);
 
+	}
+
+	public void updateList()
+	{
+		File folder = new File("./levels/");
+		File[] listOfFiles = folder.listFiles();
+
+		int index = 0;
+		levels = new String[listOfFiles.length];
+		for (File file : listOfFiles)
+		{
+			if (file.isFile())
+			{
+				System.out.println(file.getName());
+				levels[index++] = file.getName().substring(0, file.getName().indexOf("."));
+			}
+		}
+		levelList.setBorder(BorderFactory.createTitledBorder("Levels"));
+		levelList.setListData(levels);
+		
+		if (levels.length != 0) gameButton.setEnabled(true);
 	}
 
 	public void startEditor()

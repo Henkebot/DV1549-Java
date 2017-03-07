@@ -7,6 +7,8 @@ import java.awt.Graphics;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.awt.image.BufferStrategy;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -164,7 +166,17 @@ public class Editor extends Canvas implements Runnable
 		mainFrame.getContentPane().add(toolsFeatures);
 		mainFrame.add(this);
 		mainFrame.pack();
-		mainFrame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+		
+		mainFrame.addWindowListener(new WindowAdapter()
+		{
+			@Override
+			public void windowClosing(WindowEvent e)
+			{
+				isGameRunning = false;
+				mainFrame.dispose();
+			}
+		});
+		
 		mainFrame.setResizable(false);
 		mainFrame.setLocationRelativeTo(null);
 		mainFrame.setTitle("Editor");

@@ -15,7 +15,7 @@ public class Queue<T> implements IQueue<T>, Serializable
 
 	public Queue()
 	{
-		m_Array = new Object[10];
+		m_Array = new Object[2];
 		m_StartIndex = 0;
 		m_EndIndex = 0;
 
@@ -36,7 +36,7 @@ public class Queue<T> implements IQueue<T>, Serializable
 	@Override
 	public void enqueue(T element)
 	{
-		if (m_Array.length == (nrOfElements()) || m_StartIndex == m_EndIndex + 1)
+		if (m_Array.length == nrOfElements())
 			expand();
 
 		m_Array[m_EndIndex++ % m_Array.length] = element;
@@ -66,6 +66,7 @@ public class Queue<T> implements IQueue<T>, Serializable
 	{
 		if (isEmpty())
 			throw new IndexOutOfBoundsException("Call on dequeue() with empty array!");
+		
 		@SuppressWarnings("unchecked")
 		T elm = (T) m_Array[m_StartIndex];
 		m_Array[m_StartIndex++] = null;

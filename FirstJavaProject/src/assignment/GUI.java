@@ -21,6 +21,7 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 
 public class GUI extends JFrame
@@ -130,7 +131,7 @@ public class GUI extends JFrame
 		{
 			input = new ObjectInputStream(new FileInputStream("./" + filePath + ".dat"));
 
-			queue = (Queue) input.readObject();
+			queue = (IQueue) input.readObject();
 
 			input.close();
 
@@ -227,7 +228,7 @@ public class GUI extends JFrame
 	private void buildMiddlePart()
 	{
 		listQueue.setBorder(BorderFactory.createTitledBorder("Queue Content"));
-		contentPane.add(listQueue);
+		contentPane.add(new JScrollPane(listQueue));
 	}
 
 	private void buildUpperPart()

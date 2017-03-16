@@ -127,7 +127,8 @@ public class Level implements Serializable
 
 		for (int i = 1; i < entities.size(); i++)
 		{
-			if (entities.get(i).getX() == xCoord && entities.get(i).getY() == yCoord) return;
+			if (entities.get(i).getX() == xCoord && entities.get(i).getY() == yCoord)
+				return;
 		}
 
 		if (xCoord < m_Width && xCoord > 0 && yCoord < m_Height && yCoord > 0)
@@ -141,7 +142,8 @@ public class Level implements Serializable
 
 		for (int i = 1; i < entities.size(); i++)
 		{
-			if (entities.get(i).getX() == xCoord && entities.get(i).getY() == yCoord) entities.remove(i);
+			if (entities.get(i).getX() == xCoord && entities.get(i).getY() == yCoord)
+				entities.remove(i);
 		}
 	}
 
@@ -196,7 +198,8 @@ public class Level implements Serializable
 		{
 			for (int y = (entity.getY() >> TILE_SIZE_2BASE) - 1; y < (entity.getY() >> TILE_SIZE_2BASE) + 2; y++)
 			{
-				if (x < 0 || y >= (m_Height >> TILE_SIZE_2BASE) || y < 0 || x >= (m_Width >> TILE_SIZE_2BASE)) continue;
+				if (x < 0 || y >= (m_Height >> TILE_SIZE_2BASE) || y < 0 || x >= (m_Width >> TILE_SIZE_2BASE))
+					continue;
 
 				if (blockMap[x][y] == BLOCK_SOLID)
 				{
@@ -204,8 +207,10 @@ public class Level implements Serializable
 					tile.setLocation(x << TILE_SIZE_2BASE, y << TILE_SIZE_2BASE);
 					tile.setSize(TILE_SIZE_PIX, TILE_SIZE_PIX);
 
-					if (rectX.intersects(tile)) entity.setXBool(false);
-					if (tile.intersects(rectY)) entity.setYBool(false);
+					if (rectX.intersects(tile))
+						entity.setXBool(false);
+					if (tile.intersects(rectY))
+						entity.setYBool(false);
 
 				}
 			}

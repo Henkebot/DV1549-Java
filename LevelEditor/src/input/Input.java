@@ -136,7 +136,7 @@ public class Input implements KeyListener, MouseListener
 		return m_MouseRight;
 	}
 
-	public boolean isUp()
+	public static boolean isUp()
 	{
 		return up;
 	}

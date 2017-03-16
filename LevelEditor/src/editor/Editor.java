@@ -98,11 +98,10 @@ public class Editor extends Canvas implements Runnable
 		dim = new Dimension(WIDTH, HEIGHT);
 		selectedColor = Color.black;
 		list = new JList<>();
-		
-		if(levelPath == "")
+
+		if (levelPath == "")
 			level = new Level(10 * 64, 20 * 64);
-		else 
-			loadLevelFromFile(levelPath);
+		else loadLevelFromFile(levelPath);
 		render = new Render(WIDTH, HEIGHT, level);
 		input = new Input();
 		cameraX = cameraY = 0;
@@ -122,21 +121,24 @@ public class Editor extends Canvas implements Runnable
 
 				input.close();
 
-			} catch (ClassNotFoundException e)
+			}
+			catch (ClassNotFoundException e)
 			{
 
 				e.printStackTrace();
 			}
-		} catch (FileNotFoundException e)
+		}
+		catch (FileNotFoundException e)
 		{
 			System.err.println(levelPath + " was not valid");
 			e.printStackTrace();
-		} catch (IOException e)
+		}
+		catch (IOException e)
 		{
 
 			e.printStackTrace();
 		}
-		
+
 	}
 
 	private void start()
@@ -166,7 +168,7 @@ public class Editor extends Canvas implements Runnable
 		mainFrame.getContentPane().add(toolsFeatures);
 		mainFrame.add(this);
 		mainFrame.pack();
-		
+
 		mainFrame.addWindowListener(new WindowAdapter()
 		{
 			@Override
@@ -176,7 +178,7 @@ public class Editor extends Canvas implements Runnable
 				mainFrame.dispose();
 			}
 		});
-		
+
 		mainFrame.setResizable(false);
 		mainFrame.setLocationRelativeTo(null);
 		mainFrame.setTitle("Editor");

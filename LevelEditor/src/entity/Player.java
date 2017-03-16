@@ -27,13 +27,14 @@ public class Player extends Entity implements Serializable
 
 		if (Input.left) changeX -= SPEED;
 		if (Input.right) changeX += SPEED;
-		
+		//System.out.println(changeY);
 		if (!yAllowed)
 		{
 			changeY = 0;
-			if (Input.up)
+			if (Input.isUp())
 			{
 				changeY -= 18;
+				
 			}
 		}
 		else

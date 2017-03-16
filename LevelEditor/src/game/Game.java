@@ -69,7 +69,7 @@ public class Game extends Canvas implements Runnable
 
 		mainFrame.add(this);
 		mainFrame.pack();
-		
+
 		mainFrame.addWindowListener(new WindowAdapter()
 		{
 			@Override
@@ -79,7 +79,7 @@ public class Game extends Canvas implements Runnable
 				mainFrame.dispose();
 			}
 		});
-		
+
 		mainFrame.setResizable(false);
 		mainFrame.setLocationRelativeTo(null);
 		mainFrame.setTitle("Game");

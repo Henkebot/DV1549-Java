@@ -408,6 +408,8 @@ public class Editor extends Canvas implements Runnable
 								level.addEnemy(input.getMouseX() - render.getOffsets()[0],
 										input.getMouseY() - render.getOffsets()[1]);
 								break;
+							case "Coin":
+								level.addCoin(input.getMouseX() - render.getOffsets()[0], input.getMouseY() - render.getOffsets()[1]);
 						}
 					}
 					else if (input.isMouseRight())
@@ -640,7 +642,7 @@ public class Editor extends Canvas implements Runnable
 		crntToolTxt.setText("Current tool: Place Entities");
 		render.renderMode = Render.MODE.COLOR;
 
-		listContent = new String[] { "Player", "Enemy" };
+		listContent = new String[] { "Player", "Enemy", "Coin" };
 		list.setSize(200, 300);
 		list.setListData(listContent);
 		list.setBorder(BorderFactory.createTitledBorder("Selected an Entity"));

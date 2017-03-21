@@ -3,31 +3,29 @@ package entity;
 import java.awt.Color;
 import java.io.Serializable;
 
-import input.Input;
-
 public abstract class Entity implements Serializable
 {
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
-	private Color			  m_Color;
+	private static final long	serialVersionUID	= 1L;
+	private Color				m_Color;
 
-	protected int			  m_xPos;
-	protected int			  m_yPos;
+	protected int				m_xPos;
+	protected int				m_yPos;
 
-	protected int			  m_xReq;
-	protected int			  m_yReq;
+	protected int				m_xReq;
+	protected int				m_yReq;
 
-	protected int			  changeX		   = 0;
-	protected double		  changeY		   = 0;
+	protected int				changeX				= 0;
+	protected double			changeY				= 0;
 
-	protected boolean		  xAllowed;
-	protected boolean		  yAllowed;
+	private boolean				xAllowed;
+	private boolean				yAllowed;
 
-	private int				  m_Size;
-	private int[]			  m_EntityPixels;
+	private int					m_Size;
+	private int[]				m_EntityPixels;
 
 	public Entity(int x, int y, Color color)
 	{
@@ -45,11 +43,13 @@ public abstract class Entity implements Serializable
 		}
 
 	}
+
 	public boolean isJumping()
 	{
-		
-		return changeY<0;
+
+		return changeY < 0;
 	}
+
 	public int getXReq()
 	{
 		return m_xReq;
@@ -64,8 +64,10 @@ public abstract class Entity implements Serializable
 
 	public void move()
 	{
-		if (xAllowed) m_xPos = m_xReq;
-		if(yAllowed) m_yPos = m_yReq;
+		if (xAllowed)
+			m_xPos = m_xReq;
+		if (yAllowed)
+			m_yPos = m_yReq;
 	}
 
 	public int[] getPixels()
@@ -112,12 +114,18 @@ public abstract class Entity implements Serializable
 	{
 		xAllowed = b;
 	}
-	
-	public boolean yBoolStatus()
+
+	public boolean getYBool()
 	{
 		return yAllowed;
 	}
 	
+	public boolean getXBool()
+	{
+		return xAllowed;
+	}
+	
+
 	public void setYBool(boolean b)
 	{
 		yAllowed = b;

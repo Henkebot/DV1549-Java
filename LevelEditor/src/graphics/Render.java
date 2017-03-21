@@ -198,6 +198,27 @@ public class Render
 				}
 			}
 		}
+		
+		for (Entity entity : m_Level.getCoins())
+		{
+			int xScroll = entity.getX();
+			int yScroll = entity.getY();
+
+			xScroll += m_xOffset;
+			yScroll += m_yOffset;
+
+			for (int y = 0; y < entity.getSize(); y++)
+			{
+				int ya = y + yScroll;
+				for (int x = 0; x < entity.getSize(); x++)
+				{
+					int xa = x + xScroll;
+					if (xa >= m_Width || xa < 0 || ya >= m_Height || ya < 0)
+						continue;
+					m_Pixels[xa + ya * m_Width] = entity.getPixels()[x + y * entity.getSize()];
+				}
+			}
+		}
 
 	}
 

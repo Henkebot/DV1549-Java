@@ -5,37 +5,41 @@ import java.awt.Rectangle;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+import entity.Coin;
 import entity.Enemy;
 import entity.Entity;
 import entity.Player;
-import graphics.Render;
 
 public class Level implements Serializable
 {
 	/**
 	 * Allt för att få bort varningen
 	 */
-	private static final long serialVersionUID = 1L;
+	private static final long	serialVersionUID	= 1L;
 
-	public static final int	  BLOCK_NOT_USED   = 0;
-	public static final int	  BLOCK_NOT_SOLID  = 1;
-	public static final int	  BLOCK_SOLID	   = 2;
-	public static final int	  BLOCK_DANGEROUS  = 3;
+	public static final int		BLOCK_NOT_USED		= 0;
+	public static final int		BLOCK_NOT_SOLID		= 1;
+	public static final int		BLOCK_SOLID			= 2;
+	public static final int		BLOCK_DANGEROUS		= 3;
 
-	public static final int	  COLOR_NONE	   = 0;
+	public static final int		COLOR_NONE			= 0;
 
-	public static final int	  PLAYER_INDEX	   = 0;
+	public static final int		PLAYER_INDEX		= 0;
 
-	public static final int	  TILE_SIZE_2BASE  = 6;
-	public static final int	  TILE_SIZE_PIX	   = 64;
+	public static final int		TILE_SIZE_2BASE		= 6;
+	public static final int		TILE_SIZE_PIX		= 64;
 
-	private int				  m_Width;
-	private int				  m_Height;
+	private int					playerStartX;
+	private int					playerStartY;
 
-	private int[][]			  blockMap;
-	private int[][]			  colorMap;
+	private int					m_Width;
+	private int					m_Height;
 
-	private ArrayList<Entity> entities;
+	private int[][]				blockMap;
+	private int[][]				colorMap;
+
+	private ArrayList<Entity>	entities;
+	private ArrayList<Entity>	coins;
 
 	public Level(int width, int height)
 	{
@@ -60,7 +64,7 @@ public class Level implements Serializable
 			}
 		}
 
-		loadMobs();
+		loadEntities();
 
 	}
 
@@ -93,6 +97,8 @@ public class Level implements Serializable
 		{
 			entities.add(level.entities.get(i));
 		}
+		playerStartX = entities.get(PLAYER_INDEX).getX();
+		playerStartY = entities.get(PLAYER_INDEX).getY();
 
 	}
 
@@ -116,6 +122,8 @@ public class Level implements Serializable
 		{
 			entities.get(PLAYER_INDEX).setX(xCoord);
 			entities.get(PLAYER_INDEX).setY(yCoord);
+			playerStartX = xCoord;
+			playerStartY = yCoord;
 		}
 
 	}
@@ -145,6 +153,11 @@ public class Level implements Serializable
 			if (entities.get(i).getX() == xCoord && entities.get(i).getY() == yCoord)
 				entities.remove(i);
 		}
+		for (int i = 0; i < coins.size(); i++)
+		{
+			if (coins.get(i).getX() == xCoord && coins.get(i).getY() == yCoord)
+				coins.remove(i);
+		}
 	}
 
 	public void removeAllEnemies()
@@ -162,12 +175,14 @@ public class Level implements Serializable
 		return m_Width;
 	}
 
-	private void loadMobs()
+	private void loadEntities()
 	{
 		entities = new ArrayList<>();
+		coins = new ArrayList<>();
 
 		entities.add(new Player(20, 20, Color.green));
-
+		playerStartX = 20;
+		playerStartY = 20;
 	}
 
 	public void update()
@@ -178,7 +193,29 @@ public class Level implements Serializable
 			entity.requestMov();
 			collisionCheck(entity);
 			entity.move();
+			if (entity instanceof Enemy)
+				enemyCollision(entity);
 		}
+	}
+
+	private void enemyCollision(Entity entity)
+	{
+		Rectangle playerRec = new Rectangle();
+		playerRec.setLocation(entities.get(PLAYER_INDEX).getX(), entities.get(PLAYER_INDEX).getY());
+		playerRec.setSize(entities.get(PLAYER_INDEX).getSize(), entities.get(PLAYER_INDEX).getSize());
+
+		Rectangle enemyRec = new Rectangle();
+		enemyRec.setLocation(entity.getX(), entity.getY());
+		enemyRec.setSize(entity.getSize(), entity.getSize());
+
+		if (playerRec.intersects(enemyRec))
+			resetPlayer();
+	}
+
+	private void resetPlayer()
+	{
+		entities.get(PLAYER_INDEX).setX(playerStartX);
+		entities.get(PLAYER_INDEX).setY(playerStartY);
 	}
 
 	public void collisionCheck(Entity entity)
@@ -221,6 +258,11 @@ public class Level implements Serializable
 	{
 		return entities;
 	}
+	
+	public ArrayList<Entity> getCoins()
+	{
+		return coins;
+	}
 
 	public int[][] getBlockMap()
 	{
@@ -230,6 +272,23 @@ public class Level implements Serializable
 	public int[][] getColorMap()
 	{
 		return colorMap;
+	}
+
+	public void addCoin(int x, int y)
+	{
+
+		int xCoord = ((x >> TILE_SIZE_2BASE) << TILE_SIZE_2BASE) + 20;
+		int yCoord = ((y >> TILE_SIZE_2BASE) << TILE_SIZE_2BASE) + 20;
+
+		for (int i = 0; i < coins.size(); i++)
+		{
+			if (coins.get(i).getX() == xCoord && coins.get(i).getY() == yCoord)
+				return;
+		}
+
+		if (xCoord < m_Width && xCoord > 0 && yCoord < m_Height && yCoord > 0)
+			coins.add(new Coin(xCoord, yCoord, Color.YELLOW));
+		
 	}
 
 }

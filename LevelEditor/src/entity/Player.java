@@ -10,8 +10,8 @@ public class Player extends Entity implements Serializable
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
-	private final int		  SPEED			   = 4;
+	private static final long	serialVersionUID	= 1L;
+	private final int			SPEED				= 4;
 
 	public Player(int x, int y, Color color)
 	{
@@ -23,31 +23,31 @@ public class Player extends Entity implements Serializable
 	public void requestMov()
 	{
 		changeX = 0;
-		
 
-		if (Input.left) changeX -= SPEED;
-		if (Input.right) changeX += SPEED;
-		//System.out.println(changeY);
-		if (!yAllowed)
+		if (Input.left)
+			changeX -= SPEED;
+		if (Input.right)
+			changeX += SPEED;
+		
+		
+		if (!getYBool() && !isJumping())
 		{
 			changeY = 0;
-			if (Input.isUp())
+			
+			if ( Input.isUp())
 			{
 				changeY -= 18;
-				
+
 			}
-		}
-		else
+		} else
 		{
 			changeY += 1;
 		}
-		
-			m_yReq = (int) (m_yPos + changeY);
-			
-			m_xReq = m_xPos + changeX;
-			
-			
-		
+
+		m_yReq = (int) (m_yPos + changeY);
+
+		m_xReq = m_xPos + changeX;
+
 	}
 
 }

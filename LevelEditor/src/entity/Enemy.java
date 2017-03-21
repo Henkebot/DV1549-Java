@@ -24,14 +24,14 @@ public class Enemy extends Entity implements Serializable
 	{
 		changeX = 0;
 		
-		if(!xAllowed)
+		if(!getXBool())
 		{
 			if(direction == 1)
 				direction = -1;
 			else direction = 1;
 		}
 		
-		if(!yAllowed)
+		if(!getYBool())
 			changeY = 0; 
 		else
 			changeY += 1;

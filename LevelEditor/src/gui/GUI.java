@@ -156,7 +156,6 @@ public class GUI extends JFrame
 		{
 			if (file.isFile())
 			{
-				System.out.println(file.getName());
 				levels[index++] = file.getName().substring(0, file.getName().indexOf("."));
 			}
 		}

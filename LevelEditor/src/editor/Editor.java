@@ -72,7 +72,7 @@ public class Editor extends Canvas implements Runnable
 
 	// Använder i render.clear();
 	private int					coolClear		 = 1;
-
+	private String				m_LevelPath;
 	private boolean				isGameRunning;
 	private int					cameraX;
 	private int					cameraY;
@@ -86,12 +86,13 @@ public class Editor extends Canvas implements Runnable
 
 	public Editor(String levelPath)
 	{
-		initVariables(levelPath);
+		m_LevelPath = levelPath; 
+		initVariables();
 		createWindow();
 		start();
 	}
 
-	private void initVariables(String levelPath)
+	private void initVariables()
 	{
 		mainFrame = new JFrame();
 		toolsPanel = new JPanel();
@@ -100,9 +101,9 @@ public class Editor extends Canvas implements Runnable
 		selectedColor = Color.black;
 		list = new JList<>();
 
-		if (levelPath == "")
+		if (m_LevelPath == "")
 			level = new Level(10 * 64, 20 * 64);
-		else loadLevelFromFile(levelPath);
+		else loadLevelFromFile();
 
 		render = new Render(WIDTH, HEIGHT, level);
 		input = new Input();
@@ -112,11 +113,11 @@ public class Editor extends Canvas implements Runnable
 		currentTool = TOOL.NONE;
 	}
 
-	private void loadLevelFromFile(String levelPath)
+	private void loadLevelFromFile()
 	{
 		try
 		{
-			ObjectInputStream input = new ObjectInputStream(new FileInputStream("./levels/" + levelPath + ".level"));
+			ObjectInputStream input = new ObjectInputStream(new FileInputStream("./levels/" + m_LevelPath + ".level"));
 			try
 			{
 				level = new Level((Level) input.readObject());
@@ -132,7 +133,7 @@ public class Editor extends Canvas implements Runnable
 		}
 		catch (FileNotFoundException e)
 		{
-			System.err.println(levelPath + " was not valid");
+			System.err.println(m_LevelPath + " was not valid");
 			e.printStackTrace();
 		}
 		catch (IOException e)
@@ -617,7 +618,7 @@ public class Editor extends Canvas implements Runnable
 	public void saveToFile()
 	{
 
-		String name = JOptionPane.showInputDialog(this, "Level name", "sample_level");
+		String name = JOptionPane.showInputDialog(this, "Level name", m_LevelPath);
 
 		try
 		{

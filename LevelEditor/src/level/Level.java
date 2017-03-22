@@ -14,32 +14,32 @@ public class Level implements Serializable
 	/**
 	 * Allt för att få bort varningen
 	 */
-	private static final long	serialVersionUID	= 1L;
+	private static final long serialVersionUID = 1L;
 
-	public static final int		BLOCK_NOT_USED		= 0;
-	public static final int		BLOCK_NOT_SOLID		= 1;
-	public static final int		BLOCK_SOLID			= 2;
-	public static final int		BLOCK_DANGEROUS		= 3;
+	public static final int	  BLOCK_NOT_USED   = 0;
+	public static final int	  BLOCK_NOT_SOLID  = 1;
+	public static final int	  BLOCK_SOLID	   = 2;
+	public static final int	  BLOCK_DANGEROUS  = 3;
 
-	public static final int		COLOR_NONE			= 0;
+	public static final int	  COLOR_NONE	   = 0;
 
-	public static final int		PLAYER_INDEX		= 0;
+	public static final int	  PLAYER_INDEX	   = 0;
 
-	public static final int		TILE_SIZE_2BASE		= 6;
-	public static final int		TILE_SIZE_PIX		= 64;
+	public static final int	  TILE_SIZE_2BASE  = 6;
+	public static final int	  TILE_SIZE_PIX	   = 64;
 
-	private int					m_PStartX;
-	private int					m_PStartY;
+	private int				  m_PStartX;
+	private int				  m_PStartY;
 
-	private int					m_Width;
-	private int					m_Height;
+	private int				  m_Width;
+	private int				  m_Height;
 
-	private int[][]				m_BlockMap;
-	private int[][]				m_ColorMap;
+	private int[][]			  m_BlockMap;
+	private int[][]			  m_ColorMap;
 
-	private ArrayList<Entity>	m_Entities;
-	private boolean				m_HasCoins;
-	private ArrayList<Entity>	m_Coins;
+	private ArrayList<Entity> m_Entities;
+	private boolean			  m_HasCoins;
+	private ArrayList<Entity> m_Coins;
 
 	public Level(int width, int height)
 	{
@@ -48,7 +48,7 @@ public class Level implements Serializable
 
 		m_BlockMap = new int[m_Width >> TILE_SIZE_2BASE][m_Height >> TILE_SIZE_2BASE];
 		m_ColorMap = new int[m_Width >> TILE_SIZE_2BASE][m_Height >> TILE_SIZE_2BASE];
-		
+
 		for (int x = 0; x < m_Width >> TILE_SIZE_2BASE; x++)
 		{
 			for (int y = 0; y < m_Height >> TILE_SIZE_2BASE; y++)
@@ -64,9 +64,9 @@ public class Level implements Serializable
 				m_ColorMap[x][y] = COLOR_NONE;
 			}
 		}
-		
+
 		m_HasCoins = false;
-		
+
 		loadEntities();
 
 	}
@@ -163,14 +163,15 @@ public class Level implements Serializable
 			if (m_Entities.get(i).getX() == xCoord && m_Entities.get(i).getY() == yCoord)
 				m_Entities.remove(i);
 		}
-		
+
 		for (int i = 0; i < m_Coins.size(); i++)
 		{
 			if (m_Coins.get(i).getX() == xCoord && m_Coins.get(i).getY() == yCoord)
 				m_Coins.remove(i);
 		}
-		
-		if(m_Coins.size() == 0) m_HasCoins = false;
+
+		if (m_Coins.size() == 0)
+			m_HasCoins = false;
 	}
 
 	public void removeAllEnemies()
@@ -281,6 +282,25 @@ public class Level implements Serializable
 						entity.setXBool(false);
 					if (tile.intersects(rectY))
 						entity.setYBool(false);
+				}
+				if (entity instanceof Player && m_BlockMap[x][y] == BLOCK_DANGEROUS)
+				{
+					Rectangle tile = new Rectangle();
+					tile.setLocation(x << TILE_SIZE_2BASE, y << TILE_SIZE_2BASE);
+					tile.setSize(TILE_SIZE_PIX, TILE_SIZE_PIX);
+
+					Rectangle rect = new Rectangle();
+					rect.setLocation(entity.getX(), entity.getY());
+					rect.setSize(entity.getSize(), entity.getSize());
+
+					if (rect.intersects(tile))
+					{
+						entity.setXBool(false);
+						entity.setYBool(false);
+						resetPlayer();
+						
+
+					}
 
 				}
 			}
@@ -328,7 +348,8 @@ public class Level implements Serializable
 	public boolean levelComplete()
 	{
 		boolean levelCondition = false;
-		if(m_HasCoins) levelCondition = m_Coins.size() == 0;
+		if (m_HasCoins)
+			levelCondition = m_Coins.size() == 0;
 		return levelCondition;
 	}
 

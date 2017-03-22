@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 
 import graphics.Render;
 import input.Input;
@@ -53,17 +54,17 @@ public class Game extends Canvas implements Runnable
 		thread = new Thread(this, "Game Thread");
 		thread.start();
 	}
-	
+
 	private synchronized void stop()
 	{
-		
+
 		try
 		{
 			mainFrame.dispose();
 			thread.join();
-			
-			
-		} catch (InterruptedException e)
+
+		}
+		catch (InterruptedException e)
 		{
 			System.out.println("Sket sig");
 			e.printStackTrace();
@@ -158,6 +159,8 @@ public class Game extends Canvas implements Runnable
 		int frames = 0;
 		double lastTimeMilli = System.currentTimeMillis();
 		requestFocus();
+		if (!level.hasCoins())
+			JOptionPane.showMessageDialog(this, "This level have no coins to collect!");
 		while (isGameRunning)
 		{
 			long nowNano = System.nanoTime();
@@ -181,7 +184,8 @@ public class Game extends Canvas implements Runnable
 				lastTimeMilli += 1000;
 			}
 		}
-		
+		if (level.levelComplete())
+			JOptionPane.showMessageDialog(this, "Congratulations!\nYou collected all the coins!");
 		stop();
 
 	}

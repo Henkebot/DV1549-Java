@@ -144,6 +144,7 @@ public class GUI extends JFrame
 		if (index == -1)
 			index = 0;
 		new Game(levels[index]);
+		
 
 	}
 

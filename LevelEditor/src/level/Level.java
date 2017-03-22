@@ -352,5 +352,10 @@ public class Level implements Serializable
 			levelCondition = m_Coins.size() == 0;
 		return levelCondition;
 	}
+	
+	public boolean hasCoins()
+	{
+		return m_HasCoins;
+	}
 
 }

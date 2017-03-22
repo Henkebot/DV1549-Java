@@ -46,12 +46,28 @@ public class Game extends Canvas implements Runnable
 		start();
 	}
 
-	private void start()
+	private synchronized void start()
 	{
 		isGameRunning = true;
 
 		thread = new Thread(this, "Game Thread");
 		thread.start();
+	}
+	
+	private synchronized void stop()
+	{
+		
+		try
+		{
+			mainFrame.dispose();
+			thread.join();
+			
+			
+		} catch (InterruptedException e)
+		{
+			System.out.println("Sket sig");
+			e.printStackTrace();
+		}
 	}
 
 	public static Input getInput()
@@ -165,6 +181,8 @@ public class Game extends Canvas implements Runnable
 				lastTimeMilli += 1000;
 			}
 		}
+		
+		stop();
 
 	}
 
@@ -199,6 +217,7 @@ public class Game extends Canvas implements Runnable
 		int yOffset = level.getEntities().get(Level.PLAYER_INDEX).getY() - 500;
 
 		render.setOffset(-xOffset, -yOffset - 200);
+		isGameRunning = !level.levelComplete();
 
 	}
 

@@ -39,6 +39,7 @@ public class Level implements Serializable
 	private int[][]				colorMap;
 
 	private ArrayList<Entity>	entities;
+	private boolean				hasCoins;
 	private ArrayList<Entity>	coins;
 
 	public Level(int width, int height)
@@ -63,7 +64,7 @@ public class Level implements Serializable
 				colorMap[x][y] = COLOR_NONE;
 			}
 		}
-
+		hasCoins = false;
 		loadEntities();
 
 	}
@@ -96,6 +97,13 @@ public class Level implements Serializable
 		for (int i = 0; i < level.entities.size(); i++)
 		{
 			entities.add(level.entities.get(i));
+		}
+
+		coins = new ArrayList<>();
+		for (int i = 0; i < level.coins.size(); i++)
+		{
+			hasCoins = true;
+			coins.add(level.coins.get(i));
 		}
 		playerStartX = entities.get(PLAYER_INDEX).getX();
 		playerStartY = entities.get(PLAYER_INDEX).getY();
@@ -187,15 +195,35 @@ public class Level implements Serializable
 
 	public void update()
 	{
+		entities.get(PLAYER_INDEX).requestMov();
+		collisionCheck(entities.get(PLAYER_INDEX));
+		entities.get(PLAYER_INDEX).move();
+		coinCollision();
 
-		for (Entity entity : entities)
+		for (int i = 1; i < entities.size(); i++)
 		{
-			entity.requestMov();
-			collisionCheck(entity);
-			entity.move();
-			if (entity instanceof Enemy)
-				enemyCollision(entity);
+			entities.get(i).requestMov();
+			collisionCheck(entities.get(i));
+			entities.get(i).move();
+			enemyCollision(entities.get(i));
 		}
+	}
+
+	private void coinCollision()
+	{
+		Rectangle playerRec = new Rectangle();
+		playerRec.setLocation(entities.get(PLAYER_INDEX).getX(), entities.get(PLAYER_INDEX).getY());
+		playerRec.setSize(entities.get(PLAYER_INDEX).getSize(), entities.get(PLAYER_INDEX).getSize());
+
+		for (int i = 0; i < coins.size(); i++)
+		{
+			Rectangle enemyRec = new Rectangle();
+			enemyRec.setLocation(coins.get(i).getX(), coins.get(i).getY());
+			enemyRec.setSize(coins.get(i).getSize(), coins.get(i).getSize());
+			if (enemyRec.intersects(playerRec))
+				coins.remove(i);
+		}
+
 	}
 
 	private void enemyCollision(Entity entity)
@@ -258,7 +286,7 @@ public class Level implements Serializable
 	{
 		return entities;
 	}
-	
+
 	public ArrayList<Entity> getCoins()
 	{
 		return coins;
@@ -288,7 +316,15 @@ public class Level implements Serializable
 
 		if (xCoord < m_Width && xCoord > 0 && yCoord < m_Height && yCoord > 0)
 			coins.add(new Coin(xCoord, yCoord, Color.YELLOW));
-		
+		hasCoins = true;
+
+	}
+
+	public boolean levelComplete()
+	{
+		boolean levelCondition = false;
+		if(hasCoins) levelCondition = coins.size() == 0;
+		return levelCondition;
 	}
 
 }

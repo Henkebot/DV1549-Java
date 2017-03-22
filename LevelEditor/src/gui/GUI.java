@@ -18,9 +18,11 @@ import game.Game;
 
 public class GUI extends JFrame
 {
-	private Game				game;
-	private Editor				editor;
-
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	
 	private static final int	WIDTH			= 300;
 	private static final int	HEIGHT			= 300;
 
@@ -141,7 +143,7 @@ public class GUI extends JFrame
 		int index = levelList.getSelectedIndex();
 		if (index == -1)
 			index = 0;
-		game = new Game(levels[index]);
+		new Game(levels[index]);
 
 	}
 
@@ -170,8 +172,8 @@ public class GUI extends JFrame
 		int index = levelList.getSelectedIndex();
 
 		if (index == -1)
-			editor = new Editor("");
-		else editor = new Editor(levels[index]);
+			new Editor("");
+		else new Editor(levels[index]);
 
 	}
 }

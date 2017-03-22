@@ -10,12 +10,13 @@ public class Player extends Entity implements Serializable
 	/**
 	 * 
 	 */
-	private static final long	serialVersionUID	= 1L;
-	private final int			SPEED				= 4;
+	private static final long  serialVersionUID	= 1L;
+	private final int		   SPEED			= 4;
+	private static final Color m_Color			= Color.green;
 
-	public Player(int x, int y, Color color)
+	public Player(int x, int y)
 	{
-		super(x, y, color);
+		super(x, y, m_Color);
 
 	}
 
@@ -24,22 +25,22 @@ public class Player extends Entity implements Serializable
 	{
 		changeX = 0;
 
-		if (Input.left)
+		if (Input.isLeft())
 			changeX -= SPEED;
-		if (Input.right)
+		if (Input.isRight())
 			changeX += SPEED;
-		
-		
+
 		if (!getYBool() && !isJumping())
 		{
 			changeY = 0;
-			
-			if ( Input.isUp())
+
+			if (Input.isUp())
 			{
 				changeY -= 18;
 
 			}
-		} else
+		}
+		else
 		{
 			changeY += 1;
 		}

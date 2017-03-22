@@ -13,7 +13,7 @@ public class Render
 	private int			  m_Width;
 	private int			  m_Height;
 	private int[]		  m_Pixels;
-	public int[]		  tiles;
+	public int[]		  m_Tiles;
 	private BufferedImage image;
 
 	private int			  m_xOffset;
@@ -35,7 +35,7 @@ public class Render
 
 		image = new BufferedImage(m_Width, m_Height, BufferedImage.TYPE_INT_RGB);
 		m_Pixels = ((DataBufferInt) image.getRaster().getDataBuffer()).getData();
-		tiles = new int[Level.TILE_SIZE_PIX * Level.TILE_SIZE_PIX];
+		m_Tiles = new int[Level.TILE_SIZE_PIX * Level.TILE_SIZE_PIX];
 		m_Level = level;
 
 	}
@@ -146,7 +146,7 @@ public class Render
 	{
 		for (int i = 0; i < 64 * 64; i++)
 		{
-			tiles[i] = (int) (Math.random() * 0xffffff);
+			m_Tiles[i] = (int) (Math.random() * 0xffffff);
 		}
 
 		for (int y = 0; y < m_Height; y++)
@@ -154,7 +154,7 @@ public class Render
 			for (int x = 0; x < m_Width; x++)
 			{
 				int tileIndex = (x >> Level.TILE_SIZE_2BASE) + (y >> Level.TILE_SIZE_2BASE) << Level.TILE_SIZE_2BASE;
-				m_Pixels[x + y * m_Width] = tiles[tileIndex];
+				m_Pixels[x + y * m_Width] = m_Tiles[tileIndex];
 			}
 		}
 	}

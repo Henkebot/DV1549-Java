@@ -16,7 +16,7 @@ public class Input implements KeyListener, MouseListener
 	private int m_MouseY;
 	
 	private boolean m_KeyClicked;
-	public static boolean up, down, left, right;
+	private static boolean up, down, left, right;
 
 	public Input()
 	{
@@ -141,17 +141,17 @@ public class Input implements KeyListener, MouseListener
 		return up;
 	}
 
-	public boolean isDown()
+	public static boolean isDown()
 	{
 		return down;
 	}
 
-	public boolean isLeft()
+	public static boolean isLeft()
 	{
 		return left;
 	}
 
-	public boolean isRight()
+	public static boolean isRight()
 	{
 		return right;
 	}

@@ -72,6 +72,7 @@ public class Editor extends Canvas implements Runnable
 
 	// Använder i render.clear();
 	private int					coolClear		 = 1;
+
 	private boolean				isGameRunning;
 	private int					cameraX;
 	private int					cameraY;
@@ -102,6 +103,7 @@ public class Editor extends Canvas implements Runnable
 		if (levelPath == "")
 			level = new Level(10 * 64, 20 * 64);
 		else loadLevelFromFile(levelPath);
+
 		render = new Render(WIDTH, HEIGHT, level);
 		input = new Input();
 		cameraX = cameraY = 0;
@@ -338,17 +340,16 @@ public class Editor extends Canvas implements Runnable
 	private void update()
 	{
 		input.update();
-		// level.update();
 
 		// Camera movement
 		render.setOffset(cameraX, cameraY);
-		if (input.isUp())
+		if (Input.isUp())
 			cameraY += 5;
-		if (input.isDown())
+		if (Input.isDown())
 			cameraY -= 5;
-		if (input.isLeft())
+		if (Input.isLeft())
 			cameraX += 5;
-		if (input.isRight())
+		if (Input.isRight())
 			cameraX -= 5;
 
 		// Mouse inputs
@@ -409,12 +410,13 @@ public class Editor extends Canvas implements Runnable
 										input.getMouseY() - render.getOffsets()[1]);
 								break;
 							case "Coin":
-								level.addCoin(input.getMouseX() - render.getOffsets()[0], input.getMouseY() - render.getOffsets()[1]);
+								level.addCoin(input.getMouseX() - render.getOffsets()[0],
+										input.getMouseY() - render.getOffsets()[1]);
 						}
 					}
 					else if (input.isMouseRight())
 					{
-						level.removeEnemy(input.getMouseX() - render.getOffsets()[0],
+						level.removeEntity(input.getMouseX() - render.getOffsets()[0],
 								input.getMouseY() - render.getOffsets()[1]);
 					}
 					break;
@@ -447,6 +449,8 @@ public class Editor extends Canvas implements Runnable
 					}
 					break;
 				}
+				default:
+					break;
 
 			}
 

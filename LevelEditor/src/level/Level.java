@@ -1,6 +1,5 @@
 package level;
 
-import java.awt.Color;
 import java.awt.Rectangle;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -29,42 +28,45 @@ public class Level implements Serializable
 	public static final int		TILE_SIZE_2BASE		= 6;
 	public static final int		TILE_SIZE_PIX		= 64;
 
-	private int					playerStartX;
-	private int					playerStartY;
+	private int					m_PStartX;
+	private int					m_PStartY;
 
 	private int					m_Width;
 	private int					m_Height;
 
-	private int[][]				blockMap;
-	private int[][]				colorMap;
+	private int[][]				m_BlockMap;
+	private int[][]				m_ColorMap;
 
-	private ArrayList<Entity>	entities;
-	private boolean				hasCoins;
-	private ArrayList<Entity>	coins;
+	private ArrayList<Entity>	m_Entities;
+	private boolean				m_HasCoins;
+	private ArrayList<Entity>	m_Coins;
 
 	public Level(int width, int height)
 	{
 		m_Width = width;
 		m_Height = height;
 
-		blockMap = new int[m_Width >> TILE_SIZE_2BASE][m_Height >> TILE_SIZE_2BASE];
-		colorMap = new int[m_Width >> TILE_SIZE_2BASE][m_Height >> TILE_SIZE_2BASE];
+		m_BlockMap = new int[m_Width >> TILE_SIZE_2BASE][m_Height >> TILE_SIZE_2BASE];
+		m_ColorMap = new int[m_Width >> TILE_SIZE_2BASE][m_Height >> TILE_SIZE_2BASE];
+		
 		for (int x = 0; x < m_Width >> TILE_SIZE_2BASE; x++)
 		{
 			for (int y = 0; y < m_Height >> TILE_SIZE_2BASE; y++)
 			{
-				blockMap[x][y] = BLOCK_NOT_USED;
+				m_BlockMap[x][y] = BLOCK_NOT_USED;
 			}
 		}
 
-		for (int x = 0; x < colorMap.length; x++)
+		for (int x = 0; x < m_ColorMap.length; x++)
 		{
-			for (int y = 0; y < colorMap[x].length; y++)
+			for (int y = 0; y < m_ColorMap[x].length; y++)
 			{
-				colorMap[x][y] = COLOR_NONE;
+				m_ColorMap[x][y] = COLOR_NONE;
 			}
 		}
-		hasCoins = false;
+		
+		m_HasCoins = false;
+		
 		loadEntities();
 
 	}
@@ -74,49 +76,49 @@ public class Level implements Serializable
 		m_Width = level.m_Width;
 		m_Height = level.m_Height;
 
-		blockMap = new int[m_Width >> TILE_SIZE_2BASE][m_Height >> TILE_SIZE_2BASE];
-		colorMap = new int[m_Width >> TILE_SIZE_2BASE][m_Height >> TILE_SIZE_2BASE];
+		m_BlockMap = new int[m_Width >> TILE_SIZE_2BASE][m_Height >> TILE_SIZE_2BASE];
+		m_ColorMap = new int[m_Width >> TILE_SIZE_2BASE][m_Height >> TILE_SIZE_2BASE];
 
 		for (int x = 0; x < m_Width >> TILE_SIZE_2BASE; x++)
 		{
 			for (int y = 0; y < m_Height >> TILE_SIZE_2BASE; y++)
 			{
-				blockMap[x][y] = level.blockMap[x][y];
+				m_BlockMap[x][y] = level.m_BlockMap[x][y];
 			}
 		}
 
-		for (int x = 0; x < colorMap.length; x++)
+		for (int x = 0; x < m_ColorMap.length; x++)
 		{
-			for (int y = 0; y < colorMap[x].length; y++)
+			for (int y = 0; y < m_ColorMap[x].length; y++)
 			{
-				colorMap[x][y] = level.colorMap[x][y];
+				m_ColorMap[x][y] = level.m_ColorMap[x][y];
 			}
 		}
 
-		entities = new ArrayList<>();
-		for (int i = 0; i < level.entities.size(); i++)
+		m_Entities = new ArrayList<>();
+		for (int i = 0; i < level.m_Entities.size(); i++)
 		{
-			entities.add(level.entities.get(i));
+			m_Entities.add(level.m_Entities.get(i));
 		}
 
-		coins = new ArrayList<>();
-		for (int i = 0; i < level.coins.size(); i++)
+		m_Coins = new ArrayList<>();
+		for (int i = 0; i < level.m_Coins.size(); i++)
 		{
-			hasCoins = true;
-			coins.add(level.coins.get(i));
+			m_HasCoins = true;
+			m_Coins.add(level.m_Coins.get(i));
 		}
-		playerStartX = entities.get(PLAYER_INDEX).getX();
-		playerStartY = entities.get(PLAYER_INDEX).getY();
+		m_PStartX = m_Entities.get(PLAYER_INDEX).getX();
+		m_PStartY = m_Entities.get(PLAYER_INDEX).getY();
 
 	}
 
 	public void resetColorMap()
 	{
-		for (int x = 0; x < colorMap.length; x++)
+		for (int x = 0; x < m_ColorMap.length; x++)
 		{
-			for (int y = 0; y < colorMap[x].length; y++)
+			for (int y = 0; y < m_ColorMap[x].length; y++)
 			{
-				colorMap[x][y] = COLOR_NONE;
+				m_ColorMap[x][y] = COLOR_NONE;
 			}
 		}
 	}
@@ -128,10 +130,10 @@ public class Level implements Serializable
 
 		if (xCoord < m_Width && xCoord > 0 && yCoord < m_Height && yCoord > 0)
 		{
-			entities.get(PLAYER_INDEX).setX(xCoord);
-			entities.get(PLAYER_INDEX).setY(yCoord);
-			playerStartX = xCoord;
-			playerStartY = yCoord;
+			m_Entities.get(PLAYER_INDEX).setX(xCoord);
+			m_Entities.get(PLAYER_INDEX).setY(yCoord);
+			m_PStartX = xCoord;
+			m_PStartY = yCoord;
 		}
 
 	}
@@ -141,36 +143,39 @@ public class Level implements Serializable
 		int xCoord = ((x >> TILE_SIZE_2BASE) << TILE_SIZE_2BASE) + 20;
 		int yCoord = ((y >> TILE_SIZE_2BASE) << TILE_SIZE_2BASE) + 20;
 
-		for (int i = 1; i < entities.size(); i++)
+		for (int i = 1; i < m_Entities.size(); i++)
 		{
-			if (entities.get(i).getX() == xCoord && entities.get(i).getY() == yCoord)
+			if (m_Entities.get(i).getX() == xCoord && m_Entities.get(i).getY() == yCoord)
 				return;
 		}
 
 		if (xCoord < m_Width && xCoord > 0 && yCoord < m_Height && yCoord > 0)
-			entities.add(new Enemy(xCoord, yCoord, Color.red));
+			m_Entities.add(new Enemy(xCoord, yCoord));
 	}
 
-	public void removeEnemy(int x, int y)
+	public void removeEntity(int x, int y)
 	{
 		int xCoord = ((x >> TILE_SIZE_2BASE) << TILE_SIZE_2BASE) + 20;
 		int yCoord = ((y >> TILE_SIZE_2BASE) << TILE_SIZE_2BASE) + 20;
 
-		for (int i = 1; i < entities.size(); i++)
+		for (int i = 1; i < m_Entities.size(); i++)
 		{
-			if (entities.get(i).getX() == xCoord && entities.get(i).getY() == yCoord)
-				entities.remove(i);
+			if (m_Entities.get(i).getX() == xCoord && m_Entities.get(i).getY() == yCoord)
+				m_Entities.remove(i);
 		}
-		for (int i = 0; i < coins.size(); i++)
+		
+		for (int i = 0; i < m_Coins.size(); i++)
 		{
-			if (coins.get(i).getX() == xCoord && coins.get(i).getY() == yCoord)
-				coins.remove(i);
+			if (m_Coins.get(i).getX() == xCoord && m_Coins.get(i).getY() == yCoord)
+				m_Coins.remove(i);
 		}
+		
+		if(m_Coins.size() == 0) m_HasCoins = false;
 	}
 
 	public void removeAllEnemies()
 	{
-		entities.subList(1, entities.size()).clear();
+		m_Entities.subList(1, m_Entities.size()).clear();
 	}
 
 	public int getHeight()
@@ -185,43 +190,43 @@ public class Level implements Serializable
 
 	private void loadEntities()
 	{
-		entities = new ArrayList<>();
-		coins = new ArrayList<>();
+		m_Entities = new ArrayList<>();
+		m_Coins = new ArrayList<>();
 
-		entities.add(new Player(20, 20, Color.green));
-		playerStartX = 20;
-		playerStartY = 20;
+		m_PStartX = 20;
+		m_PStartY = 20;
+		m_Entities.add(new Player(m_PStartX, m_PStartY));
 	}
 
 	public void update()
 	{
-		entities.get(PLAYER_INDEX).requestMov();
-		collisionCheck(entities.get(PLAYER_INDEX));
-		entities.get(PLAYER_INDEX).move();
+		m_Entities.get(PLAYER_INDEX).requestMov();
+		collisionCheck(m_Entities.get(PLAYER_INDEX));
+		m_Entities.get(PLAYER_INDEX).move();
 		coinCollision();
 
-		for (int i = 1; i < entities.size(); i++)
+		for (int i = 1; i < m_Entities.size(); i++)
 		{
-			entities.get(i).requestMov();
-			collisionCheck(entities.get(i));
-			entities.get(i).move();
-			enemyCollision(entities.get(i));
+			m_Entities.get(i).requestMov();
+			collisionCheck(m_Entities.get(i));
+			m_Entities.get(i).move();
+			enemyCollision(m_Entities.get(i));
 		}
 	}
 
 	private void coinCollision()
 	{
 		Rectangle playerRec = new Rectangle();
-		playerRec.setLocation(entities.get(PLAYER_INDEX).getX(), entities.get(PLAYER_INDEX).getY());
-		playerRec.setSize(entities.get(PLAYER_INDEX).getSize(), entities.get(PLAYER_INDEX).getSize());
+		playerRec.setLocation(m_Entities.get(PLAYER_INDEX).getX(), m_Entities.get(PLAYER_INDEX).getY());
+		playerRec.setSize(m_Entities.get(PLAYER_INDEX).getSize(), m_Entities.get(PLAYER_INDEX).getSize());
 
-		for (int i = 0; i < coins.size(); i++)
+		for (int i = 0; i < m_Coins.size(); i++)
 		{
 			Rectangle enemyRec = new Rectangle();
-			enemyRec.setLocation(coins.get(i).getX(), coins.get(i).getY());
-			enemyRec.setSize(coins.get(i).getSize(), coins.get(i).getSize());
+			enemyRec.setLocation(m_Coins.get(i).getX(), m_Coins.get(i).getY());
+			enemyRec.setSize(m_Coins.get(i).getSize(), m_Coins.get(i).getSize());
 			if (enemyRec.intersects(playerRec))
-				coins.remove(i);
+				m_Coins.remove(i);
 		}
 
 	}
@@ -229,8 +234,8 @@ public class Level implements Serializable
 	private void enemyCollision(Entity entity)
 	{
 		Rectangle playerRec = new Rectangle();
-		playerRec.setLocation(entities.get(PLAYER_INDEX).getX(), entities.get(PLAYER_INDEX).getY());
-		playerRec.setSize(entities.get(PLAYER_INDEX).getSize(), entities.get(PLAYER_INDEX).getSize());
+		playerRec.setLocation(m_Entities.get(PLAYER_INDEX).getX(), m_Entities.get(PLAYER_INDEX).getY());
+		playerRec.setSize(m_Entities.get(PLAYER_INDEX).getSize(), m_Entities.get(PLAYER_INDEX).getSize());
 
 		Rectangle enemyRec = new Rectangle();
 		enemyRec.setLocation(entity.getX(), entity.getY());
@@ -242,8 +247,8 @@ public class Level implements Serializable
 
 	private void resetPlayer()
 	{
-		entities.get(PLAYER_INDEX).setX(playerStartX);
-		entities.get(PLAYER_INDEX).setY(playerStartY);
+		m_Entities.get(PLAYER_INDEX).setX(m_PStartX);
+		m_Entities.get(PLAYER_INDEX).setY(m_PStartY);
 	}
 
 	public void collisionCheck(Entity entity)
@@ -266,7 +271,7 @@ public class Level implements Serializable
 				if (x < 0 || y >= (m_Height >> TILE_SIZE_2BASE) || y < 0 || x >= (m_Width >> TILE_SIZE_2BASE))
 					continue;
 
-				if (blockMap[x][y] == BLOCK_SOLID)
+				if (m_BlockMap[x][y] == BLOCK_SOLID)
 				{
 					Rectangle tile = new Rectangle();
 					tile.setLocation(x << TILE_SIZE_2BASE, y << TILE_SIZE_2BASE);
@@ -284,22 +289,22 @@ public class Level implements Serializable
 
 	public ArrayList<Entity> getEntities()
 	{
-		return entities;
+		return m_Entities;
 	}
 
 	public ArrayList<Entity> getCoins()
 	{
-		return coins;
+		return m_Coins;
 	}
 
 	public int[][] getBlockMap()
 	{
-		return blockMap;
+		return m_BlockMap;
 	}
 
 	public int[][] getColorMap()
 	{
-		return colorMap;
+		return m_ColorMap;
 	}
 
 	public void addCoin(int x, int y)
@@ -308,22 +313,22 @@ public class Level implements Serializable
 		int xCoord = ((x >> TILE_SIZE_2BASE) << TILE_SIZE_2BASE) + 20;
 		int yCoord = ((y >> TILE_SIZE_2BASE) << TILE_SIZE_2BASE) + 20;
 
-		for (int i = 0; i < coins.size(); i++)
+		for (int i = 0; i < m_Coins.size(); i++)
 		{
-			if (coins.get(i).getX() == xCoord && coins.get(i).getY() == yCoord)
+			if (m_Coins.get(i).getX() == xCoord && m_Coins.get(i).getY() == yCoord)
 				return;
 		}
 
 		if (xCoord < m_Width && xCoord > 0 && yCoord < m_Height && yCoord > 0)
-			coins.add(new Coin(xCoord, yCoord, Color.YELLOW));
-		hasCoins = true;
+			m_Coins.add(new Coin(xCoord, yCoord));
+		m_HasCoins = true;
 
 	}
 
 	public boolean levelComplete()
 	{
 		boolean levelCondition = false;
-		if(hasCoins) levelCondition = coins.size() == 0;
+		if(m_HasCoins) levelCondition = m_Coins.size() == 0;
 		return levelCondition;
 	}
 

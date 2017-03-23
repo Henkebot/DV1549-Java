@@ -71,11 +71,6 @@ public class Game extends Canvas implements Runnable
 		}
 	}
 
-	public static Input getInput()
-	{
-		return input;
-	}
-
 	private void createWindow()
 	{
 		this.setPreferredSize(dim);

@@ -27,7 +27,7 @@ public class Level implements Serializable
 
 	public static final int	  TILE_SIZE_2BASE  = 6;
 	public static final int	  TILE_SIZE_PIX	   = 64;
-
+	private int snorre;
 	private int				  m_PStartX;
 	private int				  m_PStartY;
 
